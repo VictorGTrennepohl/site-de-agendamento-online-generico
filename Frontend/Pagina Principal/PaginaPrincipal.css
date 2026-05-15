@@ -35,9 +35,6 @@ body {
   background-color: var(--blue-dark);
 }
 
-/* ===========================
-   NAVBAR
-=========================== */
 .navbar {
   display: flex;
   align-items: center;
@@ -72,6 +69,9 @@ body {
 .nav-links {
   display: flex;
   gap: 32px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .nav-links a {
@@ -94,7 +94,7 @@ body {
 
 .btn-entrar {
   background: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border: 1.5px solid rgba(0, 52, 165, 0.747);
   color: var(--text-primary);
   padding: 8px 20px;
   border-radius: var(--radius-sm);
@@ -105,30 +105,27 @@ body {
 }
 
 .btn-entrar:hover {
+  border-color: rgba(0, 110, 236, 0.7);
+  background: rgba(0, 2, 112, 0.507);
+}
+
+.btn-cadastro {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: var(--text-primary);
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.btn-cadastro:hover {
   border-color: rgba(255, 255, 255, 0.7);
   background: rgba(255,255,255,0.06);
 }
 
-.btn-agendar {
-  background: var(--blue-bright);
-  border: none;
-  color: #fff;
-  padding: 8px 22px;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-}
-
-.btn-agendar:hover {
-  background: var(--blue-hover);
-  transform: translateY(-1px);
-}
-
-/* ===========================
-   HERO
-=========================== */
 .hero {
   padding: 80px 48px 60px;
   text-align: center;
@@ -156,10 +153,7 @@ body {
   font-weight: 400;
 }
 
-/* ===========================
-   SEARCH BAR
-=========================== */
-.search-bar {
+.agendar-button {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.96);
@@ -167,50 +161,17 @@ body {
   padding: 10px 10px 10px 20px;
   gap: 0;
   box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-  max-width: 820px;
+  max-width: 250px;
   margin: 0 auto;
-}
-
-.search-field {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  padding: 4px 10px;
-}
-
-.search-icon {
-  font-size: 1rem;
-  color: #6b7280;
-  flex-shrink: 0;
-}
-
-.search-field input {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 0.9rem;
-  color: #374151;
-  width: 100%;
-  font-family: 'Inter', sans-serif;
-}
-
-.search-field input::placeholder {
-  color: #9ca3af;
-}
-
-.search-divider {
-  width: 1px;
-  height: 28px;
-  background: #e5e7eb;
-  flex-shrink: 0;
 }
 
 .btn-buscar {
   background: var(--blue-bright);
   border: none;
+  display: flex;
   color: #fff;
   padding: 13px 24px;
+  margin: 0 auto;
   border-radius: var(--radius-md);
   font-size: 0.88rem;
   font-weight: 600;
@@ -226,21 +187,15 @@ body {
   transform: translateY(-1px);
 }
 
-/* ===========================
-   MAIN CONTENT LAYOUT
-=========================== */
 .main-content {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 28px;
+  display: flex;
+  justify-content: center;
   padding: 32px 48px 60px;
-  max-width: 1280px;
+  width: 100%;
+  max-width: 900px;
   margin: 0 auto;
 }
 
-/* ===========================
-   CARDS / SECTIONS
-=========================== */
 .card-section {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -249,6 +204,11 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   margin-bottom: 24px;
+}
+
+.left-column {
+  width: 100%;
+  max-width: 900px;
 }
 
 .card-section:last-child {
@@ -278,9 +238,6 @@ body {
   color: #fff;
 }
 
-/* ===========================
-   SERVICES GRID
-=========================== */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -315,244 +272,6 @@ body {
 }
 
 /* ===========================
-   TESTIMONIALS
-=========================== */
-.testimonials-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.testimonials-header .section-title {
-  margin-bottom: 0;
-}
-
-.badge-edit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 4px;
-  font-size: 0.65rem;
-}
-
-.btn-colest {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid var(--card-border);
-  color: var(--text-primary);
-  padding: 6px 18px;
-  border-radius: var(--radius-sm);
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-family: 'Inter', sans-serif;
-}
-
-.btn-colest:hover {
-  background: rgba(255,255,255,0.18);
-}
-
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.testimonial-card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.testimonial-avatar {
-  font-size: 1.6rem;
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  background: rgba(26, 110, 245, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.testimonial-text {
-  font-size: 0.8rem;
-  color: var(--text-primary);
-  line-height: 1.45;
-  margin-bottom: 6px;
-}
-
-.testimonial-author {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-/* ===========================
-   CALENDAR
-=========================== */
-.right-column {
-  position: sticky;
-  top: 90px;
-  align-self: start;
-}
-
-.calendar-card {
-  margin-bottom: 0;
-}
-
-.calendar {
-  background: rgba(255,255,255,0.97);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  color: #1e293b;
-}
-
-.calendar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.cal-month {
-  font-family: 'Sora', sans-serif;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #1e293b;
-}
-
-.cal-nav {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  color: #6b7280;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background 0.15s;
-}
-
-.cal-nav:hover {
-  background: #f3f4f6;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
-}
-
-.cal-day-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #9ca3af;
-  padding: 4px 0;
-  text-align: center;
-}
-
-.cal-day {
-  font-size: 0.82rem;
-  color: #374151;
-  padding: 6px 4px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s;
-  min-height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cal-day:hover:not(.empty) {
-  background: #e0e7ff;
-}
-
-.cal-day.empty {
-  cursor: default;
-}
-
-.cal-day.highlighted {
-  border: 1.5px solid var(--blue-bright);
-  color: var(--blue-bright);
-  font-weight: 600;
-}
-
-.cal-day.today {
-  background: var(--blue-bright);
-  color: #fff;
-  font-weight: 700;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  margin: auto;
-}
-
-.cal-day.strikethrough {
-  text-decoration: line-through;
-  color: #d1d5db;
-  cursor: default;
-}
-
-.cal-day.has-time {
-  flex-direction: column;
-  gap: 2px;
-  font-size: 0;
-}
-
-.time-badge {
-  font-size: 0.62rem;
-  font-weight: 600;
-  padding: 2px 5px;
-  border-radius: 4px;
-  background: #dbeafe;
-  color: #1d4ed8;
-  display: block;
-}
-
-.time-badge.green {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-.time-badge.red {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-/* ===========================
-   CALENDAR DOTS
-=========================== */
-.cal-dots {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 14px;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #d1d5db;
-  display: inline-block;
-}
-
-.dot.active {
-  background: var(--blue-bright);
-}
-
-/* ===========================
    RESPONSIVIDADE
 =========================== */
 @media (max-width: 1024px) {
@@ -577,10 +296,6 @@ body {
   .search-bar {
     flex-direction: column;
     padding: 14px;
-    gap: 10px;
-  }
-  .search-divider {
-    display: none;
   }
   .btn-buscar {
     width: 100%;

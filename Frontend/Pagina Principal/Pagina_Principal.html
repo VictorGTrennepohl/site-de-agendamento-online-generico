@@ -23,8 +23,8 @@
       <a href="#">Contato</a>
     </nav>
     <div class="nav-actions">
-      <button class="btn-entrar">Entrar</button>
-      <button class="btn-agendar">Agendar agora</button>
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de login/Pagina de Login.html'">Entrar</button>
+      <button class="btn-cadastro" onclick="window.location.href='../Pagina de Cadastro/CadastroUsuarios.html'">Cadastro</button>
     </div>
   </header>
  
@@ -33,22 +33,8 @@
       <h1>Agende seu horário<br />em segundos!</h1>
       <p>Médicos, salões, mecânicos, professores e muito mais. Sem fila, sem espera.</p>
  
-      <div class="search-bar">
-        <div class="search-field">
-          <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Qual serviço você precisa?" />
-        </div>
-        <div class="search-divider"></div>
-        <div class="search-field">
-          <span class="search-icon">📍</span>
-          <input type="text" placeholder="Onde?" />
-        </div>
-        <div class="search-divider"></div>
-        <div class="search-field">
-          <span class="search-icon">📅</span>
-          <input type="text" placeholder="Quando?" />
-        </div>
-        <button class="btn-buscar">Buscar horários disponíveis</button>
+      <div class="agendar-button">
+        <button class="btn-buscar">Agendar agora!</button>
       </div>
     </div>
   </section>
@@ -56,7 +42,6 @@
   <section class="main-content">
  
     <div class="left-column">
- 
       <div class="card-section">
         <h2 class="section-title">Serviços mais agendados <span class="badge">✔</span></h2>
         <div class="services-grid">
@@ -77,103 +62,6 @@
             <span>Dentista</span>
           </div>
         </div>
-      </div>
- 
-      <div class="card-section">
-        <div class="testimonials-header">
-          <h2 class="section-title">Testimonials <span class="badge-edit">✏</span></h2>
-          <button class="btn-colest">Colest</button>
-        </div>
-        <div class="testimonials-grid">
-          <div class="testimonial-card">
-            <div class="testimonial-avatar">👤</div>
-            <div>
-              <p class="testimonial-text">"Marquei em 30 segundos e fui super bem atendido!"</p>
-              <p class="testimonial-author">— Ana Clara, Florianópolis</p>
-            </div>
-          </div>
-          <div class="testimonial-card">
-            <div class="testimonial-avatar">👤</div>
-            <div>
-              <p class="testimonial-text">"Marquei em 30 segundos e fui super bem atendido!"</p>
-              <p class="testimonial-author">— Ana Clara, Florianópolis</p>
-            </div>
-          </div>
-        </div>
-      </div>
- 
-    </div>
- 
-    <div class="right-column">
-      <div class="card-section calendar-card">
-        <h2 class="section-title">Calendar <span class="badge">✔</span></h2>
- 
-        <div class="calendar">
-          <div class="calendar-header">
-            <button class="cal-nav">‹</button>
-            <span class="cal-month">Abril 2026</span>
-            <button class="cal-nav">≡</button>
-          </div>
-          <div class="calendar-grid">
-            <div class="cal-day-label">Su</div>
-            <div class="cal-day-label">Mo</div>
-            <div class="cal-day-label">Tu</div>
-            <div class="cal-day-label">We</div>
-            <div class="cal-day-label">Th</div>
-            <div class="cal-day-label">Fr</div>
-            <div class="cal-day-label">Sa</div>
- 
-            <div class="cal-day empty"></div>
-            <div class="cal-day empty"></div>
-            <div class="cal-day empty"></div>
-            <div class="cal-day has-time"><span class="time-badge">08:00</span></div>
-            <div class="cal-day">1</div>
-            <div class="cal-day has-time"><span class="time-badge green">10:30</span></div>
-            <div class="cal-day has-time"><span class="time-badge red">18:00</span></div>
- 
-            <div class="cal-day">3</div>
-            <div class="cal-day">4</div>
-            <div class="cal-day">5</div>
-            <div class="cal-day">6</div>
-            <div class="cal-day">7</div>
-            <div class="cal-day highlighted">8</div>
-            <div class="cal-day">9</div>
- 
-            <div class="cal-day">10</div>
-            <div class="cal-day highlighted">11</div>
-            <div class="cal-day">12</div>
-            <div class="cal-day">13</div>
-            <div class="cal-day strikethrough">13</div>
-            <div class="cal-day">14</div>
-            <div class="cal-day">16</div>
- 
-            <div class="cal-day">17</div>
-            <div class="cal-day">18</div>
-            <div class="cal-day today">20</div>
-            <div class="cal-day">21</div>
-            <div class="cal-day">22</div>
-            <div class="cal-day">22</div>
-            <div class="cal-day">20</div>
- 
-            <div class="cal-day">25</div>
-            <div class="cal-day">26</div>
-            <div class="cal-day">27</div>
-            <div class="cal-day">28</div>
-            <div class="cal-day">29</div>
-            <div class="cal-day empty"></div>
-            <div class="cal-day empty"></div>
- 
-            <div class="cal-day">31</div>
-          </div>
- 
-          <div class="cal-dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-        </div>
- 
       </div>
     </div>
  

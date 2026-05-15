@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro — Agende Fácil</title>
+  <link rel="stylesheet" href="Cadastros.css" />
+  <link rel="shortcut icon" href="Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="LogoTopo">
+      <img src="Logo.png" class="Logo" />
+      <span class="logo-text">AgendaFácil</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#">Início</a>
+      <a href="#">Serviços</a>
+      <a href="#">Como funciona</a>
+      <a href="#">Blog</a>
+      <a href="#">Contato</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-entrar">Entrar</button>
+    </div>
+  </header>
+
+  <!-- CADASTRO -->
+  <main class="cadastro-wrapper">
+    <div class="cadastro-card">
+
+      <div class="cadastro-header">
+        <h1>Criar sua conta</h1>
+        <p>Preencha os dados abaixo para se cadastrar gratuitamente.</p>
+      </div>
+
+      <!-- TIPO DE CONTA -->
+      <div class="tipo-conta">
+        <button class="tipo-btn active" id="btn-cliente" onclick="setTipo('cliente')">👤 Sou cliente</button>
+        <button class="tipo-btn" id="btn-profissional" onclick="setTipo('profissional')">💼 Sou profissional</button>
+      </div>
+
+      <form class="cadastro-form" onsubmit="return false;">
+
+        <!-- LINHA 1 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" placeholder="Seu nome completo" />
+          </div>
+          <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" />
+          </div>
+        </div>
+
+        <!-- LINHA 2 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input type="text" id="telefone" placeholder="(00) 00000-0000" maxlength="15" />
+          </div>
+        </div>
+
+        <!-- LINHA 3 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="senha">Senha</label>
+            <div class="input-senha">
+              <input type="password" id="senha" placeholder="Mínimo 8 caracteres" />
+              <span class="toggle-senha" onclick="toggleSenha('senha')">👁</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="confirmar">Confirmar senha</label>
+            <div class="input-senha">
+              <input type="password" id="confirmar" placeholder="Repita a senha" />
+              <span class="toggle-senha" onclick="toggleSenha('confirmar')">👁</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LINHA 4 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cidade">Cidade</label>
+            <input type="text" id="cidade" placeholder="Sua cidade" />
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado</label>
+            <select id="estado">
+              <option value="">Selecione...</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+              <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+              <option>RS</option><option>RO</option><option>RR</option><option selected>SC</option>
+              <option>SP</option><option>SE</option><option>TO</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- CAMPO PROFISSIONAL (oculto por padrão) -->
+        <div class="form-row" id="campo-profissao" style="display:none;">
+          <div class="form-group full-width">
+            <label for="profissao">Área de atuação</label>
+            <select id="profissao">
+              <option value="">Selecione sua área...</option>
+              <option>Médico</option>
+              <option>Dentista</option>
+              <option>Psicólogo</option>
+              <option>Cabeleireiro</option>
+              <option>Manicure</option>
+              <option>Mecânico</option>
+              <option>Professor</option>
+              <option>Veterinário</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TERMOS -->
+        <div class="termos">
+          <input type="checkbox" id="aceito" />
+          <label for="aceito">Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a></label>
+        </div>
+
+        <button type="submit" class="btn-cadastrar">Criar minha conta</button>
+
+        <p class="login-link">Já tem uma conta? <a href="#">Entrar</a></p>
+
+      </form>
+    </div>
+  </main>
+
+  <script>
+    function setTipo(tipo) {
+      document.getElementById('btn-cliente').classList.toggle('active', tipo === 'cliente');
+      document.getElementById('btn-profissional').classList.toggle('active', tipo === 'profissional');
+      document.getElementById('campo-profissao').style.display = tipo === 'profissional' ? 'flex' : 'none';
+    }
+
+    function toggleSenha(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+
+</body>
+</html>

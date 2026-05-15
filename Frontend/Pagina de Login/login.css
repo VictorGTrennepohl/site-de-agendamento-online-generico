@@ -1,0 +1,373 @@
+/* ===========================
+   VARIÁVEIS & RESET
+=========================== */
+:root {
+    --blue-dark:    #0a1a3a;
+    --blue-mid:     #0d2159;
+    --blue-accent:  #1a6ef5;
+    --blue-bright:  #2979ff;
+    --blue-hover:   #1557d4;
+    --card-bg:      rgba(10, 30, 80, 0.72);
+    --card-border:  rgba(255, 255, 255, 0.08);
+    --text-primary: #ffffff;
+    --text-muted:   rgba(255, 255, 255, 0.65);
+    --radius-lg:    16px;
+    --radius-md:    10px;
+    --radius-sm:    6px;
+  }
+  
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    background-image: url('https://static.vecteezy.com/ti/vetor-gratis/p1/13131262-fundo-azul-brilho-de-geometria-de-fundo-abstrato-azul-escuro-e-de-elemento-de-camada-para-design-de-apresentacao-vetor.jpg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: var(--blue-dark);
+  }
+  
+  /* ===========================
+     NAVBAR
+  =========================== */
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 48px;
+    background: rgba(8, 20, 60, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .LogoTopo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--text-primary);
+  }
+  
+  .Logo {
+    height: 50px;
+    width: auto;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  
+  .nav-links a:hover {
+    color: var(--text-primary);
+  }
+  
+  .nav-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  /* ===========================
+     LOGIN WRAPPER
+  =========================== */
+  .login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    min-height: calc(100vh - 73px);
+  }
+  
+  .login-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 44px 48px;
+    width: 100%;
+    max-width: 460px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  /* ===========================
+     CABEÇALHO
+  =========================== */
+  .login-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  
+  .login-icon {
+    font-size: 2rem;
+    color: var(--blue-bright);
+    margin-bottom: 12px;
+  }
+  
+  .login-header h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  
+  .login-header p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+  
+  /* ===========================
+     FORMULÁRIO
+  =========================== */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .form-group label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  
+  .esqueceu {
+    font-size: 0.8rem;
+    color: #7eb3ff;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  
+  .esqueceu:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+  
+  /* ===========================
+     INPUT COM ÍCONE
+  =========================== */
+  .input-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-icon .icon {
+    position: absolute;
+    left: 12px;
+    font-size: 1rem;
+    pointer-events: none;
+  }
+  
+  .input-icon input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    padding: 11px 14px 11px 38px;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  
+  .input-icon input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .input-icon input:focus {
+    border-color: var(--blue-bright);
+    background: rgba(41, 121, 255, 0.1);
+  }
+  
+  .toggle-senha {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+  
+  .toggle-senha:hover {
+    opacity: 1;
+  }
+  
+  /* ===========================
+     LEMBRAR DE MIM
+  =========================== */
+  .lembrar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .lembrar input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--blue-bright);
+    cursor: pointer;
+  }
+  
+  .lembrar label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  
+  /* ===========================
+     BOTÃO LOGIN
+  =========================== */
+  .btn-login {
+    width: 100%;
+    background: var(--blue-bright);
+    border: none;
+    color: #fff;
+    padding: 13px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    transition: background 0.2s, transform 0.15s;
+  }
+  
+  .btn-login:hover {
+    background: var(--blue-hover);
+    transform: translateY(-1px);
+  }
+  
+  /* ===========================
+     DIVISOR
+  =========================== */
+  .divisor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .divisor span {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .divisor p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  
+  /* ===========================
+     LOGIN SOCIAL
+  =========================== */
+  .social-login {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    padding: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  
+  .btn-social:hover {
+    background: rgba(255, 255, 255, 0.13);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  .btn-social img {
+    width: 18px;
+    height: 18px;
+  }
+  
+  /* ===========================
+     LINK CADASTRO
+  =========================== */
+  .cadastro-link {
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+  
+  .cadastro-link a {
+    color: #7eb3ff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  
+  .cadastro-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* ===========================
+     RESPONSIVIDADE
+  =========================== */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 14px 20px;
+    }
+  
+    .nav-links {
+      display: none;
+    }
+  
+    .login-card {
+      padding: 32px 24px;
+    }
+  
+    .social-login {
+      flex-direction: column;
+    }
+  }

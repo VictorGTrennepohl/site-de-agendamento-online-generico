@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Agende Fácil</title>
+  <link rel="stylesheet" href="login.css" />
+  <link rel="shortcut icon" href="../Pagina Principal/Logo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="LogoTopo">
+      <img src="../Pagina Principal/Logo.png" class="Logo" />
+      <span class="logo-text">AgendaFácil</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#">Início</a>
+      <a href="#">Serviços</a>
+      <a href="#">Como funciona</a>
+      <a href="#">Blog</a>
+      <a href="#">Contato</a>
+    </nav>
+  </header>
+
+  <!-- LOGIN -->
+  <main class="login-wrapper">
+    <div class="login-card">
+
+      <div class="login-header">
+        <div class="login-icon">✦</div>
+        <h1>Bem-vindo de volta!</h1>
+        <p>Entre na sua conta para continuar</p>
+      </div>
+
+      <form class="login-form" onsubmit="return false;">
+
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <div class="input-icon">
+            <span class="icon">📧</span>
+            <input type="email" id="email" placeholder="seu@email.com" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label for="senha">Senha</label>
+            <a href="#" class="esqueceu">Esqueceu a senha?</a>
+          </div>
+          <div class="input-icon">
+            <span class="icon">🔒</span>
+            <input type="password" id="senha" placeholder="Sua senha" />
+            <span class="toggle-senha" onclick="toggleSenha()">👁</span>
+          </div>
+        </div>
+
+        <div class="lembrar">
+          <input type="checkbox" id="lembrar" />
+          <label for="lembrar">Lembrar de mim</label>
+        </div>
+
+        <button type="submit" class="btn-login">Entrar na minha conta</button>
+
+        <div class="divisor">
+          <span></span>
+          <p>ou continue com</p>
+          <span></span>
+        </div>
+
+        <div class="social-login">
+          <button type="button" class="btn-social">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+            Google
+          </button>
+          <button type="button" class="btn-social">
+            <img src="https://www.svgrepo.com/show/448234/facebook.svg" alt="Facebook" />
+            Facebook
+          </button>
+        </div>
+
+        <p class="cadastro-link">Não tem uma conta? <a href="cadastro.html">Cadastre-se grátis</a></p>
+
+      </form>
+    </div>
+  </main>
+
+  <script>
+    function toggleSenha() {
+      const input = document.getElementById('senha');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+
+</body>
+</html>
