@@ -32,9 +32,6 @@
     background-color: var(--blue-dark);
   }
   
-  /* ===========================
-     NAVBAR
-  =========================== */
   .navbar {
     display: flex;
     align-items: center;

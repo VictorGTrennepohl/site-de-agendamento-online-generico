@@ -10,25 +10,21 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <header class="navbar">
     <div class="LogoTopo">
       <img src="Logo.png" class="Logo" />
       <span class="logo-text">AgendaFácil</span>
     </div>
     <nav class="nav-links">
-      <a href="#">Início</a>
-      <a href="#">Serviços</a>
-      <a href="#">Como funciona</a>
-      <a href="#">Blog</a>
-      <a href="#">Contato</a>
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
+      <a href="../Pagina de tutorial/Comofunciona.html">Como funciona</a>
+      <a href="../Pagina de contato/contato.html">Contato</a>
     </nav>
     <div class="nav-actions">
-      <button class="btn-entrar">Entrar</button>
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de login/Pagina de Login.html'">Entrar</button>
     </div>
   </header>
 
-  <!-- CADASTRO -->
   <main class="cadastro-wrapper">
     <div class="cadastro-card">
 
@@ -37,7 +33,6 @@
         <p>Preencha os dados abaixo para se cadastrar gratuitamente.</p>
       </div>
 
-      <!-- TIPO DE CONTA -->
       <div class="tipo-conta">
         <button class="tipo-btn active" id="btn-cliente" onclick="setTipo('cliente')">👤 Sou cliente</button>
         <button class="tipo-btn" id="btn-profissional" onclick="setTipo('profissional')">💼 Sou profissional</button>
@@ -45,7 +40,6 @@
 
       <form class="cadastro-form" onsubmit="return false;">
 
-        <!-- LINHA 1 -->
         <div class="form-row">
           <div class="form-group">
             <label for="nome">Nome completo</label>
@@ -57,7 +51,6 @@
           </div>
         </div>
 
-        <!-- LINHA 2 -->
         <div class="form-row">
           <div class="form-group">
             <label for="email">E-mail</label>
@@ -69,7 +62,6 @@
           </div>
         </div>
 
-        <!-- LINHA 3 -->
         <div class="form-row">
           <div class="form-group">
             <label for="senha">Senha</label>
@@ -87,7 +79,6 @@
           </div>
         </div>
 
-        <!-- LINHA 4 -->
         <div class="form-row">
           <div class="form-group">
             <label for="cidade">Cidade</label>
@@ -135,7 +126,7 @@
 
         <button type="submit" class="btn-cadastrar">Criar minha conta</button>
 
-        <p class="login-link">Já tem uma conta? <a href="#">Entrar</a></p>
+        <p class="login-link">Já tem uma conta? <a href="../Pagina de Login/Pagina de Login.html">Entrar</a></p>
 
       </form>
     </div>

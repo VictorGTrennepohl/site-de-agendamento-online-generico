@@ -104,19 +104,19 @@
   }
   
   /* ===========================
-     HERO
+     busca
   =========================== */
-  .hero {
+  .busca {
     padding: 70px 48px 60px;
     text-align: center;
   }
   
-  .hero-content {
+  .busca-content {
     max-width: 820px;
     margin: 0 auto;
   }
   
-  .hero h1 {
+  .busca h1 {
     font-family: 'Sora', sans-serif;
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
@@ -125,7 +125,7 @@
     text-shadow: 0 2px 20px rgba(0,0,0,0.4);
   }
   
-  .hero p {
+  .busca p {
     font-size: 1rem;
     color: var(--text-muted);
     margin-bottom: 36px;
@@ -408,7 +408,7 @@
   @media (max-width: 768px) {
     .navbar { padding: 14px 20px; }
     .nav-links { display: none; }
-    .hero { padding: 48px 20px 40px; }
+    .busca { padding: 48px 20px 40px; }
   
     .search-bar {
       flex-direction: column;
