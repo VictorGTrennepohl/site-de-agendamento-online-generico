@@ -123,9 +123,9 @@
   }
   
   .login-icon {
-    font-size: 2rem;
-    color: var(--blue-bright);
-    margin-bottom: 12px;
+    height: 60px;
+  width: auto;
+  margin-bottom: 12px;
   }
   
   .login-header h1 {
