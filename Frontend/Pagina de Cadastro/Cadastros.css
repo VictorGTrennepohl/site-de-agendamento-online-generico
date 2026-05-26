@@ -104,6 +104,49 @@
     background: rgba(255,255,255,0.06);
   }
   
+  .secao-titulo {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #7eb3ff;
+    padding: 10px 0 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 4px;
+  }
+  
+  .opcional {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  #campo-profissional {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+  
+  #campo-profissional textarea {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    resize: none;
+    height: 90px;
+    width: 100%;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  
+  #campo-profissional textarea:focus {
+    border-color: var(--blue-bright);
+    background: rgba(41, 121, 255, 0.1);
+  }
+
   /* ===========================
      CADASTRO WRAPPER
   =========================== */

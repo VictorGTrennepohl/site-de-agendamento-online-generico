@@ -99,8 +99,11 @@
           </div>
         </div>
 
-        <!-- CAMPO PROFISSIONAL (oculto por padrão) -->
-        <div class="form-row" id="campo-profissao" style="display:none;">
+      <!-- CAMPOS PROFISSIONAL (oculto por padrão) -->
+      <div id="campo-profissional" style="display:none;">
+
+        <!-- Área de atuação -->
+        <div class="form-row">
           <div class="form-group full-width">
             <label for="profissao">Área de atuação</label>
             <select id="profissao">
@@ -113,10 +116,62 @@
               <option>Mecânico</option>
               <option>Professor</option>
               <option>Veterinário</option>
+              <option>Nutricionista</option>
               <option>Outro</option>
             </select>
           </div>
         </div>
+
+        <div class="secao-titulo">🏢 Dados do Estabelecimento</div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="nome-estab">Nome do estabelecimento</label>
+            <input type="text" id="nome-estab" placeholder="Ex: Clínica Vida, Salão Beleza & Arte..." />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cnpj">CNPJ <span class="opcional">(opcional)</span></label>
+            <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18" />
+          </div>
+          <div class="form-group">
+            <label for="tel-estab">Telefone do estabelecimento</label>
+            <input type="text" id="tel-estab" placeholder="(00) 00000-0000" maxlength="15" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="endereco">Endereço</label>
+            <input type="text" id="endereco" placeholder="Rua, número, complemento..." />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bairro">Bairro</label>
+            <input type="text" id="bairro" placeholder="Bairro" />
+          </div>
+          <div class="form-group">
+            <label for="cidade-estab">Cidade</label>
+            <input type="text" id="cidade-estab" placeholder="Cidade" />
+          </div>
+          <div class="form-group" style="max-width:90px;">
+            <label for="cep">CEP</label>
+            <input type="text" id="cep" placeholder="00000-000" maxlength="9" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="descricao">Descrição do serviço <span class="opcional">(opcional)</span></label>
+            <textarea id="descricao" placeholder="Descreva brevemente os serviços que você oferece..."></textarea>
+          </div>
+        </div>
+
+      </div>
 
         <!-- TERMOS -->
         <div class="termos">
@@ -132,18 +187,7 @@
     </div>
   </main>
 
-  <script>
-    function setTipo(tipo) {
-      document.getElementById('btn-cliente').classList.toggle('active', tipo === 'cliente');
-      document.getElementById('btn-profissional').classList.toggle('active', tipo === 'profissional');
-      document.getElementById('campo-profissao').style.display = tipo === 'profissional' ? 'flex' : 'none';
-    }
-
-    function toggleSenha(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
-  </script>
+  <script src="cadastro.js"></script>
 
 </body>
 </html>
