@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contato — Agende Fácil</title>
+  <link rel="stylesheet" href="contato.css" />
+  <link rel="shortcut icon" href="Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="LogoTopo">
+      <img src="Logo.png" class="Logo" />
+      <span class="logo-text">AgendaFácil</span>
+    </div>
+    <nav class="nav-links">
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
+      <a href="../Pagina de tutorial/Comofunciona.html">Como funciona</a>
+      <a href="../Pagina de contato/contato.html" class="active">Contato</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de Login/Pagina de Login.html'">Entrar</button>
+      <button class="btn-cadastro" onclick="window.location.href='../Pagina de Cadastro/CadastroUsuarios.html'">Cadastro</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Entre em contato</h1>
+      <p>Tem dúvidas, sugestões ou quer ser um parceiro? Estamos aqui para ajudar.</p>
+    </div>
+  </section>
+
+  <main class="contato-wrapper">
+
+    <div class="info-col">
+
+      <div class="info-card">
+        <div class="info-ico">📧</div>
+        <div>
+          <div class="info-label">E-mail</div>
+          <div class="info-val">contato@agendafacil.com.br</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-ico">📞</div>
+        <div>
+          <div class="info-label">Telefone / WhatsApp</div>
+          <div class="info-val">(48) 99999-0000</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-ico">📍</div>
+        <div>
+          <div class="info-label">Endereço</div>
+          <div class="info-val">Chapecó, SC — Brasil</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-ico">⏰</div>
+        <div>
+          <div class="info-label">Horário de atendimento</div>
+          <div class="info-val">Segunda a Sexta, das 8h às 18h</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-ico">🌐</div>
+        <div>
+          <div class="info-label">Redes sociais</div>
+          <div class="social-row">
+            <button class="btn-social">Instagram</button>
+            <button class="btn-social">LinkedIn</button>
+            <button class="btn-social">Facebook</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-col">
+      <h2>Envie uma mensagem</h2>
+
+      <form class="contato-form" onsubmit="enviarForm(event)">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" placeholder="Seu nome" required />
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="telefone">Telefone</label>
+          <input type="text" id="telefone" placeholder="(00) 00000-0000" maxlength="15" />
+        </div>
+
+        <div class="form-group">
+          <label for="assunto">Assunto</label>
+          <select id="assunto" required>
+            <option value="">Selecione o assunto...</option>
+            <option>Dúvida sobre agendamento</option>
+            <option>Problema técnico</option>
+            <option>Quero ser parceiro profissional</option>
+            <option>Sugestão de melhoria</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="mensagem">Mensagem</label>
+          <textarea id="mensagem" placeholder="Escreva sua mensagem aqui..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-enviar">Enviar mensagem</button>
+
+        <div class="sucesso" id="sucesso" style="display:none;">
+          ✅ Mensagem enviada com sucesso! Entraremos em contato em breve.
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <script>
+    function enviarForm(e) {
+      e.preventDefault();
+      document.getElementById('sucesso').style.display = 'block';
+      e.target.reset();
+      setTimeout(() => {
+        document.getElementById('sucesso').style.display = 'none';
+      }, 5000);
+    }
+  </script>
+
+</body>
+</html>

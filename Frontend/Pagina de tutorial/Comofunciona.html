@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Como Funciona — Agende Fácil</title>
+  <link rel="stylesheet" href="comofunciona.css" />
+  <link rel="shortcut icon" href="Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="LogoTopo">
+      <img src="Logo.png" class="Logo" />
+      <span class="logo-text">AgendaFácil</span>
+    </div>
+    <nav class="nav-links">
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
+      <a href="../Pagina de tutorial/Comofunciona.html" class="active">Como funciona</a>
+      <a href="../Pagina de contato/contato.html">Contato</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de Login/Pagina de Login.html'">Entrar</button>
+      <button class="btn-cadastro" onclick="window.location.href='../Pagina de Cadastro/CadastroUsuarios.html'">Cadastro</button>
+    </div>
+  </header>
+
+  <section class="servicos">
+    <div class="servicos-content">
+      <h1>Como funciona o<br />AgendaFácil?</h1>
+      <p>Em apenas 4 passos simples você agenda seu horário sem sair de casa, sem filas e sem espera.</p>
+    </div>
+  </section>
+
+  <section class="passos-section">
+    <div class="passos-grid">
+
+      <div class="passo-card">
+        <div class="passo-numero">01</div>
+        <div class="passo-icon">🔍</div>
+        <h3>Busque o serviço</h3>
+        <p>Digite o serviço que você precisa e informe a sua cidade na barra de busca. Você pode buscar por médico, cabeleireiro, mecânico e muito mais.</p>
+      </div>
+
+      <div class="passo-seta">→</div>
+
+      <div class="passo-card">
+        <div class="passo-numero">02</div>
+        <div class="passo-icon">👨‍⚕️</div>
+        <h3>Escolha o profissional</h3>
+        <p>Veja os perfis completos dos profissionais disponíveis, incluindo avaliações de outros clientes, preços e especialidades.</p>
+      </div>
+
+      <div class="passo-seta">→</div>
+
+      <div class="passo-card">
+        <div class="passo-numero">03</div>
+        <div class="passo-icon">📅</div>
+        <h3>Selecione o horário</h3>
+        <p>Escolha a data e o horário que melhor se encaixa na sua agenda. Veja em tempo real quais horários estão disponíveis.</p>
+      </div>
+
+      <div class="passo-seta">→</div>
+
+      <div class="passo-card">
+        <div class="passo-numero">04</div>
+        <div class="passo-icon">✅</div>
+        <h3>Confirme e pronto!</h3>
+        <p>Receba a confirmação do agendamento por e-mail ou WhatsApp em segundos. Sem burocracia, sem ligações.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VANTAGENS -->
+  <section class="vantagens-section">
+    <h2>Por que usar o AgendaFácil?</h2>
+    <div class="vantagens-grid">
+
+      <div class="vantagem-card">
+        <div class="vantagem-icon">⚡</div>
+        <h4>Rápido</h4>
+        <p>Agende em menos de 30 segundos, a qualquer hora do dia ou da noite.</p>
+      </div>
+
+      <div class="vantagem-card">
+        <div class="vantagem-icon">🔒</div>
+        <h4>Seguro</h4>
+        <p>Seus dados são protegidos e todos os profissionais são verificados.</p>
+      </div>
+
+      <div class="vantagem-card">
+        <div class="vantagem-icon">💸</div>
+        <h4>Gratuito</h4>
+        <p>Para clientes, o agendamento é sempre gratuito. Sem taxas escondidas.</p>
+      </div>
+
+      <div class="vantagem-card">
+        <div class="vantagem-icon">🔔</div>
+        <h4>Lembretes</h4>
+        <p>Receba lembretes automáticos por WhatsApp antes do seu compromisso.</p>
+      </div>
+
+      <div class="vantagem-card">
+        <div class="vantagem-icon">🔄</div>
+        <h4>Fácil de remarcar</h4>
+        <p>Precisa cancelar ou remarcar? Faça isso com apenas um clique.</p>
+      </div>
+
+      <div class="vantagem-card">
+        <div class="vantagem-icon">⭐</div>
+        <h4>Profissionais avaliados</h4>
+        <p>Leia avaliações reais de outros clientes antes de escolher.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <h2>Perguntas frequentes</h2>
+    <div class="faq-lista">
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-pergunta">
+          <span>O agendamento é realmente gratuito?</span>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-resposta">
+          Sim! Para clientes, o AgendaFácil é 100% gratuito. Você pode agendar quantos horários quiser sem pagar nada. A plataforma é mantida por uma pequena taxa cobrada dos profissionais parceiros.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-pergunta">
+          <span>Posso cancelar ou remarcar meu agendamento?</span>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-resposta">
+          Sim! Você pode cancelar ou remarcar qualquer agendamento diretamente pela plataforma, na página "Meus Agendamentos". Recomendamos avisar com pelo menos 2 horas de antecedência.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-pergunta">
+          <span>Como me tornar um profissional parceiro?</span>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-resposta">
+          Basta criar uma conta do tipo "Profissional" na página de cadastro. Após o cadastro, você poderá configurar sua agenda, definir seus serviços e começar a receber agendamentos.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-pergunta">
+          <span>Como funciona o sistema de avaliações?</span>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-resposta">
+          Após cada consulta concluída, o cliente pode deixar uma avaliação com nota de 1 a 5 estrelas e um comentário. Todas as avaliações são verificadas e só podem ser feitas por quem realmente usou o serviço.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-pergunta">
+          <span>O pagamento é feito pela plataforma?</span>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-resposta">
+          Atualmente o pagamento é combinado diretamente com o profissional no momento do atendimento. Em breve teremos pagamento online integrado.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-box">
+      <h2>Pronto para começar?</h2>
+      <p>Mais de 50.000 pessoas já usam o AgendaFácil. Experimente agora, é grátis!</p>
+      <div class="cta-btns">
+        <button class="btn-cta-primary" onclick="window.location.href='agendar.html'">Agendar agora →</button>
+        <button class="btn-cta-secondary" onclick="window.location.href='cadastro.html'">Criar conta grátis</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function toggleFaq(item) {
+      const aberto = item.classList.contains('aberto');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('aberto');
+        i.querySelector('.faq-ico').textContent = '+';
+      });
+      if (!aberto) {
+        item.classList.add('aberto');
+        item.querySelector('.faq-ico').textContent = '−';
+      }
+    }
+  </script>
+
+</body>
+</html>

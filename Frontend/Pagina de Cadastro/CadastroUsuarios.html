@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro — Agende Fácil</title>
+  <link rel="stylesheet" href="Cadastros.css" />
+  <link rel="shortcut icon" href="Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="LogoTopo">
+      <img src="Logo.png" class="Logo" />
+      <span class="logo-text">AgendaFácil</span>
+    </div>
+    <nav class="nav-links">
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
+      <a href="../Pagina de tutorial/Comofunciona.html">Como funciona</a>
+      <a href="../Pagina de contato/contato.html">Contato</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de login/Pagina de Login.html'">Entrar</button>
+    </div>
+  </header>
+
+  <main class="cadastro-wrapper">
+    <div class="cadastro-card">
+
+      <div class="cadastro-header">
+        <h1>Criar sua conta</h1>
+        <p>Preencha os dados abaixo para se cadastrar gratuitamente.</p>
+      </div>
+
+      <div class="tipo-conta">
+        <button class="tipo-btn active" id="btn-cliente" onclick="setTipo('cliente')">👤 Sou cliente</button>
+        <button class="tipo-btn" id="btn-profissional" onclick="setTipo('profissional')">💼 Sou profissional</button>
+      </div>
+
+      <form class="cadastro-form" onsubmit="return false;">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" placeholder="Seu nome completo" />
+          </div>
+          <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input type="text" id="telefone" placeholder="(00) 00000-0000" maxlength="15" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="senha">Senha</label>
+            <div class="input-senha">
+              <input type="password" id="senha" placeholder="Mínimo 8 caracteres" />
+              <span class="toggle-senha" onclick="toggleSenha('senha')">👁</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="confirmar">Confirmar senha</label>
+            <div class="input-senha">
+              <input type="password" id="confirmar" placeholder="Repita a senha" />
+              <span class="toggle-senha" onclick="toggleSenha('confirmar')">👁</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cidade">Cidade</label>
+            <input type="text" id="cidade" placeholder="Sua cidade" />
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado</label>
+            <select id="estado">
+              <option value="">Selecione...</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+              <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+              <option>RS</option><option>RO</option><option>RR</option><option selected>SC</option>
+              <option>SP</option><option>SE</option><option>TO</option>
+            </select>
+          </div>
+        </div>
+
+      <!-- CAMPOS PROFISSIONAL (oculto por padrão) -->
+      <div id="campo-profissional" style="display:none;">
+
+        <!-- Área de atuação -->
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="profissao">Área de atuação</label>
+            <select id="profissao">
+              <option value="">Selecione sua área...</option>
+              <option>Médico</option>
+              <option>Dentista</option>
+              <option>Psicólogo</option>
+              <option>Cabeleireiro</option>
+              <option>Manicure</option>
+              <option>Mecânico</option>
+              <option>Professor</option>
+              <option>Veterinário</option>
+              <option>Nutricionista</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="secao-titulo">🏢 Dados do Estabelecimento</div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="nome-estab">Nome do estabelecimento</label>
+            <input type="text" id="nome-estab" placeholder="Ex: Clínica Vida, Salão Beleza & Arte..." />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cnpj">CNPJ <span class="opcional">(opcional)</span></label>
+            <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18" />
+          </div>
+          <div class="form-group">
+            <label for="tel-estab">Telefone do estabelecimento</label>
+            <input type="text" id="tel-estab" placeholder="(00) 00000-0000" maxlength="15" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="endereco">Endereço</label>
+            <input type="text" id="endereco" placeholder="Rua, número, complemento..." />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bairro">Bairro</label>
+            <input type="text" id="bairro" placeholder="Bairro" />
+          </div>
+          <div class="form-group">
+            <label for="cidade-estab">Cidade</label>
+            <input type="text" id="cidade-estab" placeholder="Cidade" />
+          </div>
+          <div class="form-group" style="max-width:90px;">
+            <label for="cep">CEP</label>
+            <input type="text" id="cep" placeholder="00000-000" maxlength="9" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="descricao">Descrição do serviço <span class="opcional">(opcional)</span></label>
+            <textarea id="descricao" placeholder="Descreva brevemente os serviços que você oferece..."></textarea>
+          </div>
+        </div>
+
+      </div>
+
+        <!-- TERMOS -->
+        <div class="termos">
+          <input type="checkbox" id="aceito" />
+          <label for="aceito">Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a></label>
+        </div>
+
+        <button type="submit" class="btn-cadastrar">Criar minha conta</button>
+
+        <p class="login-link">Já tem uma conta? <a href="../Pagina de Login/Pagina de Login.html">Entrar</a></p>
+
+      </form>
+    </div>
+  </main>
+
+  <script src="cadastro.js"></script>
+
+</body>
+</html>

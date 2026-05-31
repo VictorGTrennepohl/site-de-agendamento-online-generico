@@ -1,0 +1,419 @@
+:root {
+  --blue-dark:    #0a1a3a;
+  --blue-mid:     #0d2159;
+  --blue-accent:  #1a6ef5;
+  --blue-bright:  #2979ff;
+  --blue-hover:   #1557d4;
+  --card-bg:      rgba(10, 30, 80, 0.72);
+  --card-border:  rgba(255, 255, 255, 0.08);
+  --text-primary: #ffffff;
+  --text-muted:   rgba(255, 255, 255, 0.65);
+  --radius-lg:    16px;
+  --radius-md:    10px;
+  --radius-sm:    6px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+  min-height: 100vh;
+  background-image: url('https://static.vecteezy.com/ti/vetor-gratis/p1/13131262-fundo-azul-brilho-de-geometria-de-fundo-abstrato-azul-escuro-e-de-elemento-de-camada-para-design-de-apresentacao-vetor.jpg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: var(--blue-dark);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 48px;
+  background: rgba(8, 20, 60, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--card-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.LogoTopo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+}
+
+.Logo { height: 50px; width: auto; }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active { color: var(--text-primary); }
+
+.nav-links a.active { font-weight: 700; }
+
+.nav-actions { display: flex; gap: 12px; align-items: center; }
+
+.btn-entrar {
+  background: transparent;
+  border: 1.5px solid rgba(0, 52, 165, 0.747);
+  color: var(--text-primary);
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.btn-entrar:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255,255,255,0.06);
+}
+
+.btn-entrar:hover {
+  border-color: rgba(0, 110, 236, 0.7);
+  background: rgba(0, 2, 112, 0.507);
+}
+
+.btn-cadastro {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: var(--text-primary);
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.btn-cadastro:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255,255,255,0.06);
+}
+
+
+.servicos {
+  padding: 72px 48px 56px;
+  text-align: center;
+}
+
+.servicos-content { max-width: 680px; margin: 0 auto; }
+
+.servicos h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  line-height: 1.18;
+}
+
+.servicos p {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+
+.passos-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.passos-grid {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.passo-card {
+  flex: 1;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.passo-card:hover {
+  border-color: rgba(41, 121, 255, 0.4);
+  transform: translateY(-4px);
+}
+
+.passo-numero {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--blue-bright);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.passo-icon {
+  font-size: 2.4rem;
+  margin-bottom: 14px;
+}
+
+.passo-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.passo-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.passo-seta {
+  font-size: 1.6rem;
+  color: rgba(41, 121, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.vantagens-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.vantagens-section h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.vantagens-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.vantagem-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.vantagem-card:hover {
+  border-color: rgba(41, 121, 255, 0.35);
+  transform: translateY(-3px);
+}
+
+.vantagem-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.vantagem-card h4 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.vantagem-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.faq-section {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.faq-section h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.faq-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.faq-item:hover {
+  border-color: rgba(41, 121, 255, 0.3);
+}
+
+.faq-item.aberto {
+  border-color: rgba(41, 121, 255, 0.4);
+}
+
+.faq-pergunta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  gap: 12px;
+}
+
+.faq-ico {
+  color: var(--blue-bright);
+  font-size: 1.3rem;
+  font-weight: 300;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.faq-resposta {
+  max-height: 0;
+  overflow: hidden;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  padding: 0 20px;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faq-item.aberto .faq-resposta {
+  max-height: 200px;
+  padding: 0 20px 16px;
+}
+
+.cta-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.cta-box {
+  background: rgba(41, 121, 255, 0.12);
+  border: 1px solid rgba(41, 121, 255, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 48px;
+  text-align: center;
+}
+
+.cta-box h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.cta-box p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.cta-btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.btn-cta-primary {
+  background: var(--blue-bright);
+  border: none;
+  color: #fff;
+  padding: 13px 32px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-cta-primary:hover {
+  background: var(--blue-hover);
+  transform: translateY(-1px);
+}
+
+.btn-cta-secondary {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
+  padding: 13px 32px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.btn-cta-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255,255,255,0.06);
+}
+
+@media (max-width: 1024px) {
+  .passos-grid { flex-wrap: wrap; }
+  .passo-seta { display: none; }
+  .passo-card { min-width: calc(50% - 8px); }
+  .vantagens-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .servicos { padding: 48px 20px 40px; }
+  .passo-card { min-width: 100%; }
+  .vantagens-grid { grid-template-columns: 1fr; }
+  .cta-btns { flex-direction: column; align-items: center; }
+}
