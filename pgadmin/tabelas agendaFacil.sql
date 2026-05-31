@@ -27,3 +27,30 @@ CREATE TABLE estabelecimentos (
 );
 
 SELECT * FROM usuarios;
+
+CREATE TABLE horarios (
+  id SERIAL PRIMARY KEY,
+  profissional_id INT REFERENCES usuarios(id),
+  dia_semana VARCHAR(10),
+  horario TIME,
+  disponivel BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE agendamentos (
+  id SERIAL PRIMARY KEY,
+  cliente_id INT REFERENCES usuarios(id),
+  horario_id INT REFERENCES horarios(id),
+  status VARCHAR(20) DEFAULT 'confirmado',
+  criado_em TIMESTAMP DEFAULT NOW()
+);
+
+
+INSERT INTO horarios (profissional_id, dia_semana, horario, disponivel)
+VALUES 
+(2, 'Segunda', '08:00', TRUE),
+(2, 'Segunda', '09:00', TRUE),
+(2, 'Segunda', '10:00', TRUE),
+(2, 'Terça',   '08:00', TRUE),
+(2, 'Terça',   '09:00', FALSE),
+(2, 'Quarta',  '10:00', TRUE);

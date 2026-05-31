@@ -1,3 +1,5 @@
+//para iniciar o servidor, usar terminal na pasta backend e digite: node server.js
+
 require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
@@ -21,7 +23,6 @@ pool.connect()
   .then(() => console.log('✅ Conectado ao PostgreSQL!'))
   .catch(err => console.error('❌ Erro ao conectar:', err.message));
 
-// ROTA: CADASTRO
 app.post('/api/cadastro', async (req, res) => {
   const {
     nome, email, cpf, telefone, senha, cidade, estado, tipo,
@@ -63,7 +64,6 @@ app.post('/api/cadastro', async (req, res) => {
   }
 });
 
-// ROTA: LOGIN
 app.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 
@@ -93,6 +93,23 @@ app.post('/login', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ erro: 'Erro interno no servidor.' });
+  }
+});
+
+app.get('/api/profissionais', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT u.id, u.nome, e.profissao, e.nome_estab, 
+             e.tel_estab, e.endereco, e.bairro, e.cidade, e.descricao
+      FROM usuarios u
+      INNER JOIN estabelecimentos e ON e.usuario_id = u.id
+      WHERE u.tipo = 'profissional'
+      ORDER BY u.nome ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar profissionais.' });
   }
 });
 

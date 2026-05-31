@@ -3,203 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agendar — Agende Fácil</title>
+  <title>Agendar — AgendaFácil</title>
   <link rel="stylesheet" href="agendamento.css" />
-  <link rel="shortcut icon" href="Logo.png" />
+  <link rel="shortcut icon" href="../Pagina Principal/Logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <header class="navbar">
     <div class="LogoTopo">
-      <img src="Logo.png" class="Logo" />
+      <img src="../Pagina Principal/Logo.png" class="Logo" />
       <span class="logo-text">AgendaFácil</span>
     </div>
     <nav class="nav-links">
-      <a href="#">Início</a>
-      <a href="#">Serviços</a>
-      <a href="#">Como funciona</a>
-      <a href="#">Blog</a>
-      <a href="#">Contato</a>
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
+      <a href="../Pagina de tutorial/Comofunciona.html">Como funciona</a>
+      <a href="../Pagina de contato/contato.html">Contato</a>
     </nav>
     <div class="nav-actions">
-      <button class="btn-entrar">Entrar</button>
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de login/Pagina de Login.html'">Entrar</button>
+      <button class="btn-cadastro" onclick="window.location.href='../Pagina de Cadastro/CadastroUsuarios.html'">Cadastro</button>
     </div>
   </header>
 
-  <section class="busca">
-    <div class="busca-content">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
       <h1>Encontre o profissional ideal</h1>
-      <p>Busque por área, especialidade ou nome e agende em segundos.</p>
-
-      <!-- BARRA DE PESQUISA -->
+      <p>Todos os profissionais abaixo estão cadastrados e prontos para atender você.</p>
       <div class="search-bar">
-
         <div class="search-field">
-          <span class="search-label">Área profissional</span>
-          <div class="search-input-row">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="input-area" placeholder="Ex: Médico, Dentista, Mecânico..." list="sugestoes-area" />
-            <datalist id="sugestoes-area">
-              <option value="Médico">
-              <option value="Dentista">
-              <option value="Psicólogo">
-              <option value="Cabeleireiro">
-              <option value="Manicure">
-              <option value="Mecânico">
-              <option value="Professor">
-              <option value="Veterinário">
-              <option value="Nutricionista">
-              <option value="Fisioterapeuta">
-            </datalist>
-          </div>
+          <span class="search-icon">🔍</span>
+          <input type="text" id="input-busca" placeholder="Buscar por nome, área ou cidade..." oninput="filtrarProfissionais()" />
         </div>
-
         <div class="search-divider"></div>
-
         <div class="search-field">
-          <span class="search-label">Local</span>
-          <div class="search-input-row">
-            <span class="search-icon">📍</span>
-            <input type="text" id="input-local" placeholder="Cidade ou bairro..." />
-          </div>
+          <span class="search-icon">🏷️</span>
+          <select id="input-area" onchange="filtrarProfissionais()">
+            <option value="">Todas as áreas</option>
+            <option>Médico</option>
+            <option>Dentista</option>
+            <option>Psicólogo</option>
+            <option>Cabeleireiro</option>
+            <option>Manicure</option>
+            <option>Mecânico</option>
+            <option>Professor</option>
+            <option>Veterinário</option>
+            <option>Nutricionista</option>
+            <option>Outro</option>
+          </select>
         </div>
-
-        <button class="btn-buscar" onclick="buscar()">Buscar profissionais</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- CATEGORIAS RÁPIDAS -->
-  <section class="categorias">
-    <h2>Categorias populares</h2>
-    <div class="cat-grid">
-      <div class="cat-card" onclick="selecionarCategoria('Médico')">
-        <div class="cat-icon">🩺</div>
-        <span>Médico</span>
-      </div>
-      <div class="cat-card" onclick="selecionarCategoria('Dentista')">
-        <div class="cat-icon">🦷</div>
-        <span>Dentista</span>
-      </div>
-      <div class="cat-card" onclick="selecionarCategoria('Psicólogo')">
-        <div class="cat-icon">💆</div>
-        <span>Psicólogo</span>
-      </div>
-      <div class="cat-card" onclick="selecionarCategoria('Cabeleireiro')">
-        <div class="cat-icon">✂️</div>
-        <span>Cabeleireiro</span>
-      </div>
-      <div class="cat-card" onclick="selecionarCategoria('Mecânico')">
-        <div class="cat-icon">🚗</div>
-        <span>Mecânico</span>
-      </div>
-      <div class="cat-card" onclick="selecionarCategoria('Professor')">
-        <div class="cat-icon">📚</div>
-        <span>Professor</span>
-      </div>
-      <div class="cat-card" onclick="selecionarCategoria('Veterinário')">
-        <div class="cat-icon">🐾</div>
-        <span>Veterinário</span>
-      </div>
-      <div class="cat-card" onclick="selecionarCategoria('Nutricionista')">
-        <div class="cat-icon">🥗</div>
-        <span>Nutricionista</span>
       </div>
     </div>
   </section>
 
   <!-- RESULTADOS -->
-  <section class="resultados" id="resultados" style="display:none;">
-    <div class="resultados-header">
-      <h2 id="titulo-resultados">Resultados</h2>
-      <span class="total-resultados" id="total-resultados">4 profissionais encontrados</span>
+  <section class="resultados">
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Buscando profissionais...</p>
     </div>
-
-    <div class="profissionais-grid">
-
-      <div class="prof-card">
-        <div class="prof-avatar">CS</div>
-        <div class="prof-info">
-          <div class="prof-nome">Dr. Carlos Souza</div>
-          <div class="prof-area">Clínico Geral</div>
-          <div class="prof-local">📍 Centro — Florianópolis</div>
-          <div class="prof-estrelas">⭐⭐⭐⭐⭐ <span>4.9 (128 avaliações)</span></div>
-        </div>
-        <div class="prof-acoes">
-          <div class="prof-preco">A partir de <strong>R$ 150</strong></div>
-          <button class="btn-agendar-card">Agendar</button>
-        </div>
-      </div>
-
-      <div class="prof-card">
-        <div class="prof-avatar">PM</div>
-        <div class="prof-info">
-          <div class="prof-nome">Dra. Paula Menezes</div>
-          <div class="prof-area">Odontologia</div>
-          <div class="prof-local">📍 Estreito — Florianópolis</div>
-          <div class="prof-estrelas">⭐⭐⭐⭐⭐ <span>4.8 (97 avaliações)</span></div>
-        </div>
-        <div class="prof-acoes">
-          <div class="prof-preco">A partir de <strong>R$ 120</strong></div>
-          <button class="btn-agendar-card">Agendar</button>
-        </div>
-      </div>
-
-      <div class="prof-card">
-        <div class="prof-avatar">AL</div>
-        <div class="prof-info">
-          <div class="prof-nome">Ana Lima</div>
-          <div class="prof-area">Cabeleireira</div>
-          <div class="prof-local">📍 Trindade — Florianópolis</div>
-          <div class="prof-estrelas">⭐⭐⭐⭐⭐ <span>5.0 (213 avaliações)</span></div>
-        </div>
-        <div class="prof-acoes">
-          <div class="prof-preco">A partir de <strong>R$ 80</strong></div>
-          <button class="btn-agendar-card">Agendar</button>
-        </div>
-      </div>
-
-      <div class="prof-card">
-        <div class="prof-avatar">MP</div>
-        <div class="prof-info">
-          <div class="prof-nome">Dr. Marcos Pires</div>
-          <div class="prof-area">Psicologia</div>
-          <div class="prof-local">📍 Centro — Florianópolis</div>
-          <div class="prof-estrelas">⭐⭐⭐⭐⭐ <span>4.7 (64 avaliações)</span></div>
-        </div>
-        <div class="prof-acoes">
-          <div class="prof-preco">A partir de <strong>R$ 180</strong></div>
-          <button class="btn-agendar-card">Agendar</button>
-        </div>
-      </div>
-
+    <div class="profissionais-grid" id="lista-profissionais"></div>
+    <div class="vazio" id="vazio" style="display:none;">
+      <div class="vazio-icon">🔍</div>
+      <h3>Nenhum profissional encontrado</h3>
+      <p>Tente buscar por outro nome ou área.</p>
     </div>
   </section>
 
-  <script>
-    function buscar() {
-      const area = document.getElementById('input-area').value.trim();
-      const local = document.getElementById('input-local').value.trim();
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="fecharModalFora(event)">
+    <div class="modal">
 
-      const secao = document.getElementById('resultados');
-      const titulo = document.getElementById('titulo-resultados');
+      <button class="modal-fechar" onclick="fecharModal()">✕</button>
 
-      let texto = 'Profissionais';
-      if (area) texto += ` de ${area}`;
-      if (local) texto += ` em ${local}`;
+      <!-- DADOS DO ESTABELECIMENTO -->
+      <div class="modal-header">
+        <div class="modal-avatar" id="modal-avatar">?</div>
+        <div>
+          <h2 id="modal-nome"></h2>
+          <div class="modal-area" id="modal-area"></div>
+        </div>
+      </div>
 
-      titulo.textContent = texto;
-      secao.style.display = 'block';
-      secao.scrollIntoView({ behavior: 'smooth' });
-    }
+      <div class="modal-info">
+        <div class="modal-info-item">🏢 <span id="modal-estab"></span></div>
+        <div class="modal-info-item">📍 <span id="modal-endereco"></span></div>
+        <div class="modal-info-item">📞 <span id="modal-tel"></span></div>
+        <div class="modal-info-item descricao" id="modal-descricao-wrap">
+          💬 <span id="modal-descricao"></span>
+        </div>
+      </div>
 
-    function selecionarCategoria(categoria) {
-      document.getElementById('input-area').value = categoria;
-      buscar();
-    }
-  </script>
+      <div class="modal-divider"></div>
+
+      <!-- QUADRO DE HORÁRIOS -->
+      <h3 class="modal-subtitulo">📅 Selecione um horário</h3>
+      <div id="quadro-horarios"></div>
+
+      <!-- CONFIRMAÇÃO -->
+      <div id="confirmacao" style="display:none;">
+        <div class="confirmacao-box">
+          <p>Horário selecionado: <strong id="confirmacao-horario"></strong></p>
+        </div>
+      </div>
+
+      <input type="hidden" id="horario-selecionado-id" />
+      <input type="hidden" id="horario-selecionado-txt" />
+
+      <button class="btn-confirmar" id="btn-confirmar" style="display:none;" onclick="confirmarAgendamento()">
+        Confirmar agendamento ✅
+      </button>
+
+    </div>
+  </div>
+
+  <script src="Pagina Agendamento.js"></script>
+  <script src="../../auth.js"></script>
 
 </body>
 </html>
