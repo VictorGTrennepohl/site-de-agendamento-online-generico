@@ -1,3 +1,15 @@
+// Preenche campos vindos do Google
+const params = new URLSearchParams(window.location.search);
+const emailGoogle = params.get('email');
+const nomeGoogle  = params.get('nome');
+
+if (emailGoogle) {
+  document.getElementById('email').value = decodeURIComponent(emailGoogle);
+  document.getElementById('email').readOnly = true;
+}
+if (nomeGoogle) {
+  document.getElementById('nome').value = decodeURIComponent(nomeGoogle);
+}
 // ─── URL do seu servidor backend ─────────────────────────────────────────────
 const API_URL = 'http://localhost:3000/api/cadastro';
 
@@ -86,14 +98,16 @@ document.querySelector('.cadastro-form').addEventListener('submit', async functi
 
     const json = await resposta.json();
 
-    if (resposta.ok) {
+   if (resposta.ok) {
+      localStorage.setItem('usuario', JSON.stringify(json.usuario));
       alerta('Cadastro realizado com sucesso! Redirecionando...', 'sucesso');
       setTimeout(() => {
-        window.location.href = '../Pagina de Login/Pagina de Login.html';
+        window.location.href = '../Pagina Principal/Pagina_Principal.html';
       }, 2000);
     } else {
       alerta(json.erro || 'Erro ao realizar cadastro.', 'erro');
     }
+     
 
   } catch (err) {
     console.error(err);

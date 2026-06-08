@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="agendamento.css" />
   <link rel="shortcut icon" href="../Pagina Principal/Logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    if (!localStorage.getItem('usuario')) {
+      window.location.href = '../Pagina de login/Pagina de Login.html';
+    }
+  </script>
 </head>
 <body>
 
@@ -110,6 +115,7 @@
 
       <input type="hidden" id="horario-selecionado-id" />
       <input type="hidden" id="horario-selecionado-txt" />
+      <input type="hidden" id="horario-prof-id" />
 
       <button class="btn-confirmar" id="btn-confirmar" style="display:none;" onclick="confirmarAgendamento()">
         Confirmar agendamento ✅

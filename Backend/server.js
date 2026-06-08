@@ -1,16 +1,18 @@
 //para iniciar o servidor, usar terminal na pasta backend e digite: node server.js
 
 require('dotenv').config();
-const express = require('express');
+const express  = require('express');
 const { Pool } = require('pg');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
+const cors     = require('cors');
+const bcrypt   = require('bcrypt');
+const session  = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const app  = express();
+const PORT = process.env.PORT || 3000;
 
-// CONEXÃO COM O BANCO
+// ─── Conexão com PostgreSQL ───────────────────────────────────────────────────
 const pool = new Pool({
   host:     process.env.DB_HOST,
   port:     process.env.DB_PORT,
@@ -23,6 +25,79 @@ pool.connect()
   .then(() => console.log('✅ Conectado ao PostgreSQL!'))
   .catch(err => console.error('❌ Erro ao conectar:', err.message));
 
+// ─── Middlewares ──────────────────────────────────────────────────────────────
+app.use(cors());
+app.use(express.json());
+
+// ─── Sessão e Passport ────────────────────────────────────────────────────────
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+// ─── Estratégia Google ────────────────────────────────────────────────────────
+passport.use(new GoogleStrategy({
+  clientID:     process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL:  'http://localhost:3000/auth/google/callback',
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    const resultado = await pool.query(
+      'SELECT * FROM usuarios WHERE email = $1', [profile.emails[0].value]
+    );
+
+    if (resultado.rows.length > 0) {
+      // Usuário já cadastrado — faz login normalmente
+      return done(null, { ...resultado.rows[0], jaExiste: true });
+    }
+
+    // Usuário não cadastrado — passa os dados do Google
+    return done(null, {
+      jaExiste: false,
+      nome:  profile.displayName,
+      email: profile.emails[0].value,
+    });
+
+  } catch (err) {
+    return done(err, null);
+  }
+}));
+
+// ─── Rotas Google Auth ────────────────────────────────────────────────────────
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    if (req.user.jaExiste) {
+      // Já cadastrado — loga e vai para página principal
+      const usuario = {
+        id:    req.user.id,
+        nome:  req.user.nome,
+        email: req.user.email,
+        tipo:  req.user.tipo,
+      };
+      const dados = encodeURIComponent(JSON.stringify(usuario));
+      res.redirect(`http://127.0.0.1:5501/Frontend/Pagina%20de%20login/Pagina%20de%20Login.html?usuario=${dados}`);
+    } else {
+      // Não cadastrado — vai para cadastro com email preenchido
+      const email = encodeURIComponent(req.user.email);
+      const nome  = encodeURIComponent(req.user.nome);
+      res.redirect(`http://127.0.0.1:5501/Frontend/Pagina%20de%20Cadastro/CadastroUsuarios.html?email=${email}&nome=${nome}`);
+    }
+  }
+);
+
+// ─── Rota: Cadastro ───────────────────────────────────────────────────────────
 app.post('/api/cadastro', async (req, res) => {
   const {
     nome, email, cpf, telefone, senha, cidade, estado, tipo,
@@ -44,17 +119,39 @@ app.post('/api/cadastro', async (req, res) => {
 
     const usuarioId = resultUsuario.rows[0].id;
 
+    // DEPOIS
     if (tipo === 'profissional') {
       await pool.query(
         `INSERT INTO estabelecimentos 
           (usuario_id, profissao, nome_estab, cnpj, tel_estab, endereco, bairro, cidade, cep, descricao)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
         [usuarioId, profissao, nomeEstab, cnpj, telEstab, endereco, bairro, cidadeEstab, cep, descricao]
       );
+
+      // Cria horários padrão automaticamente
+      const dias     = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+      const horarios = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+
+      for (const dia of dias) {
+        for (const horario of horarios) {
+          await pool.query(
+            `INSERT INTO horarios (profissional_id, dia_semana, horario, disponivel)
+            VALUES ($1, $2, $3, TRUE)`,
+            [usuarioId, dia, horario]
+          );
+        }
+      }
     }
-
-    res.status(201).json({ mensagem: 'Cadastro realizado com sucesso!' });
-
+    res.status(201).json({ 
+      mensagem: 'Cadastro realizado com sucesso!',
+      usuario: {
+        id:    resultUsuario.rows[0].id,
+        nome:  nome,
+        email: email,
+        tipo:  tipo
+      }
+    });
+    
   } catch (err) {
     if (err.code === '23505') {
       return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
@@ -64,6 +161,7 @@ app.post('/api/cadastro', async (req, res) => {
   }
 });
 
+// ─── Rota: Login ──────────────────────────────────────────────────────────────
 app.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 
@@ -78,7 +176,7 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
     }
 
-    const usuario = result.rows[0];
+    const usuario     = result.rows[0];
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
 
     if (!senhaCorreta) {
@@ -96,6 +194,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// ─── Rota: Buscar Profissionais ───────────────────────────────────────────────
 app.get('/api/profissionais', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -113,7 +212,58 @@ app.get('/api/profissionais', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// ─── Rota: Buscar Horários do Profissional ────────────────────────────────────
+app.get('/api/horarios/:profissionalId', async (req, res) => {
+  try {
+    const { profissionalId } = req.params;
+    const result = await pool.query(`
+      SELECT h.id, h.dia_semana, h.horario, h.disponivel
+      FROM horarios h
+      WHERE h.profissional_id = $1
+      ORDER BY h.dia_semana, h.horario
+    `, [profissionalId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar horários.' });
+  }
+});
+
+// ─── Rota: Confirmar Agendamento ──────────────────────────────────────────────
+app.post('/api/agendamentos', async (req, res) => {
+  const { clienteId, horarioId } = req.body;
+
+  if (!clienteId || !horarioId) {
+    return res.status(400).json({ erro: 'Dados incompletos.' });
+  }
+
+  try {
+    const horario = await pool.query(
+      'SELECT * FROM horarios WHERE id = $1 AND disponivel = TRUE', [horarioId]
+    );
+
+    if (horario.rows.length === 0) {
+      return res.status(400).json({ erro: 'Este horário já foi ocupado.' });
+    }
+
+    await pool.query(
+      `INSERT INTO agendamentos (cliente_id, horario_id) VALUES ($1, $2)`,
+      [clienteId, horarioId]
+    );
+
+    await pool.query(
+      'UPDATE horarios SET disponivel = FALSE WHERE id = $1', [horarioId]
+    );
+
+    res.status(201).json({ mensagem: 'Agendamento confirmado com sucesso!' });
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao confirmar agendamento.' });
+  }
+});
+
+// ─── Inicia o servidor ────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });

@@ -595,3 +595,52 @@ body {
   line-height: 1.6;
   margin-top: 16px;
 }
+
+/* NAVEGAÇÃO DE SEMANA */
+.semana-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
+.semana-nav span {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  flex: 1;
+}
+
+.semana-nav button {
+  background: rgba(41, 121, 255, 0.15);
+  border: 1px solid rgba(41, 121, 255, 0.3);
+  color: #7eb3ff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.semana-nav button:hover:not(:disabled) {
+  background: rgba(41, 121, 255, 0.3);
+}
+
+.semana-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dia-passado {
+  opacity: 0.4;
+}
+
+.slot.passado {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.9rem;
+}

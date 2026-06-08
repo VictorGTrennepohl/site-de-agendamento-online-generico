@@ -1,3 +1,11 @@
+// Captura login via Google
+const params = new URLSearchParams(window.location.search);
+const usuarioGoogle = params.get('usuario');
+if (usuarioGoogle) {
+  localStorage.setItem('usuario', decodeURIComponent(usuarioGoogle));
+  window.location.href = '../Pagina Principal/Pagina_Principal.html';
+}
+
 document.querySelector('.btn-login').addEventListener('click', async function (e) {
   e.preventDefault();
 

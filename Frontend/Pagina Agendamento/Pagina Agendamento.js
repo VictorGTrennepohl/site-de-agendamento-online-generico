@@ -1,12 +1,20 @@
 const API_URL = 'http://localhost:3000/api';
 
 let todosProfissionais = [];
+let horariosAtuais     = [];
+let semanaOffset       = 0; // 0 = semana atual, 1 = próxima, -1 = anterior
 
-// ─── Carrega profissionais ao abrir a página ─────────────────────────────────
+// ─── Verifica login e carrega profissionais ──────────────────────────────────
 document.addEventListener('DOMContentLoaded', async function () {
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  if (!usuario) {
+    window.location.href = '../Pagina de login/Pagina de Login.html';
+    return;
+  }
   await carregarProfissionais();
 });
 
+// ─── Carrega profissionais do banco ──────────────────────────────────────────
 async function carregarProfissionais() {
   const loading = document.getElementById('loading');
   const lista   = document.getElementById('lista-profissionais');
@@ -85,7 +93,36 @@ function filtrarProfissionais() {
   renderizarProfissionais(filtrados);
 }
 
-// ─── Abre o modal com dados do profissional ──────────────────────────────────
+// ─── Utilitários de data ──────────────────────────────────────────────────────
+function getDiasSemana(offset) {
+  const diasNomes = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const hoje = new Date();
+  const diaSemana = hoje.getDay(); // 0=Dom, 1=Seg...
+  const inicioSemana = new Date(hoje);
+  // Vai para segunda-feira da semana atual
+  inicioSemana.setDate(hoje.getDate() - (diaSemana === 0 ? 6 : diaSemana - 1) + (offset * 7));
+
+  const dias = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(inicioSemana);
+    d.setDate(inicioSemana.getDate() + i);
+    dias.push({
+      nome:  diasNomes[d.getDay()],
+      data:  d,
+      label: `${diasNomes[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`,
+      passado: new Date(d).setHours(0,0,0,0) < new Date().setHours(0,0,0,0)
+    });
+  }
+  return dias;
+}
+
+function formatarPeriodo(dias) {
+  const inicio = dias[0].data;
+  const fim    = dias[6].data;
+  return `${String(inicio.getDate()).padStart(2,'0')}/${String(inicio.getMonth()+1).padStart(2,'0')} — ${String(fim.getDate()).padStart(2,'0')}/${String(fim.getMonth()+1).padStart(2,'0')}/${fim.getFullYear()}`;
+}
+
+// ─── Abre o modal ────────────────────────────────────────────────────────────
 async function abrirModal(prof) {
   const usuario = JSON.parse(localStorage.getItem('usuario'));
   if (!usuario) {
@@ -94,22 +131,22 @@ async function abrirModal(prof) {
     return;
   }
 
-  // Preenche os dados do estabelecimento no modal
-  document.getElementById('modal-nome').textContent     = prof.nome;
-  document.getElementById('modal-area').textContent     = prof.profissao || '';
-  document.getElementById('modal-estab').textContent    = prof.nome_estab || '';
-  document.getElementById('modal-endereco').textContent = prof.endereco ? `${prof.endereco}, ${prof.bairro || ''} — ${prof.cidade || ''}` : '';
-  document.getElementById('modal-tel').textContent      = prof.tel_estab || '';
+  semanaOffset = 0;
+
+  document.getElementById('modal-nome').textContent      = prof.nome;
+  document.getElementById('modal-area').textContent      = prof.profissao || '';
+  document.getElementById('modal-estab').textContent     = prof.nome_estab || '';
+  document.getElementById('modal-endereco').textContent  = prof.endereco ? `${prof.endereco}, ${prof.bairro || ''} — ${prof.cidade || ''}` : '';
+  document.getElementById('modal-tel').textContent       = prof.tel_estab || '';
   document.getElementById('modal-descricao').textContent = prof.descricao || '';
+  document.getElementById('modal-avatar').textContent    = prof.nome.charAt(0).toUpperCase();
 
-  // Limpa seleção anterior
-  document.getElementById('horario-selecionado-id').value   = '';
-  document.getElementById('horario-selecionado-txt').value  = '';
-  document.getElementById('confirmacao').style.display      = 'none';
-  document.getElementById('quadro-horarios').style.display  = 'block';
-  document.getElementById('btn-confirmar').style.display    = 'none';
+  document.getElementById('horario-selecionado-id').value  = '';
+  document.getElementById('horario-selecionado-txt').value = '';
+  document.getElementById('confirmacao').style.display     = 'none';
+  document.getElementById('quadro-horarios').style.display = 'block';
+  document.getElementById('btn-confirmar').style.display   = 'none';
 
-  // Carrega horários
   await carregarHorarios(prof.id);
 
   document.getElementById('modal-overlay').style.display = 'flex';
@@ -122,82 +159,123 @@ function fecharModal() {
   document.body.style.overflow = '';
 }
 
-// ─── Carrega e monta o quadro de horários ────────────────────────────────────
+function fecharModalFora(e) {
+  if (e.target.id === 'modal-overlay') fecharModal();
+}
+
+// ─── Navega entre semanas ─────────────────────────────────────────────────────
+async function navegarSemana(direcao) {
+  semanaOffset += direcao;
+  if (semanaOffset < 0) semanaOffset = 0; // não permite voltar para o passado
+  const profId = document.getElementById('horario-prof-id').value;
+  await renderizarQuadro(profId);
+}
+
+// ─── Carrega horários do banco ────────────────────────────────────────────────
 async function carregarHorarios(profissionalId) {
+  document.getElementById('horario-prof-id').value = profissionalId;
   const quadro = document.getElementById('quadro-horarios');
   quadro.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px">Carregando horários...</p>';
 
   try {
     const resposta = await fetch(`${API_URL}/horarios/${profissionalId}`);
-    const horarios = await resposta.json();
-
-    if (horarios.length === 0) {
-      quadro.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px">Nenhum horário cadastrado.</p>';
-      return;
-    }
-
-    // Organiza por dia
-    const dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-    const porDia = {};
-    dias.forEach(d => porDia[d] = []);
-    horarios.forEach(h => {
-      if (porDia[h.dia_semana] !== undefined) {
-        porDia[h.dia_semana].push(h);
-      }
-    });
-
-    // Monta a tabela
-    const diasComHorario = dias.filter(d => porDia[d].length > 0);
-
-    let html = '<div class="quadro-tabela"><table><thead><tr><th>Horário</th>';
-    diasComHorario.forEach(d => html += `<th>${d}</th>`);
-    html += '</tr></thead><tbody>';
-
-    // Pega todos os horários únicos
-    const horariosUnicos = [...new Set(horarios.map(h => h.horario))].sort();
-
-    horariosUnicos.forEach(hora => {
-      const horaFormatada = hora.substring(0, 5);
-      html += `<tr><td class="hora-col">${horaFormatada}</td>`;
-      diasComHorario.forEach(dia => {
-        const slot = porDia[dia].find(h => h.horario === hora);
-        if (slot) {
-          if (slot.disponivel) {
-            html += `<td><button class="slot disponivel" onclick="selecionarHorario(${slot.id}, '${dia} ${horaFormatada}', this)">✅</button></td>`;
-          } else {
-            html += `<td><button class="slot ocupado" disabled>❌</button></td>`;
-          }
-        } else {
-          html += `<td><span class="slot vazio">—</span></td>`;
-        }
-      });
-      html += '</tr>';
-    });
-
-    html += '</tbody></table></div>';
-    quadro.innerHTML = html;
-
+    horariosAtuais = await resposta.json();
+    await renderizarQuadro(profissionalId);
   } catch (err) {
     quadro.innerHTML = '<p style="color:#f87171;text-align:center;padding:20px">Erro ao carregar horários.</p>';
   }
 }
 
-// ─── Seleciona um horário disponível ────────────────────────────────────────
+// ─── Renderiza o quadro com a semana correta ──────────────────────────────────
+async function renderizarQuadro(profissionalId) {
+  const quadro = document.getElementById('quadro-horarios');
+
+  if (horariosAtuais.length === 0) {
+    quadro.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px">Nenhum horário cadastrado.</p>';
+    return;
+  }
+
+  const diasSemana = getDiasSemana(semanaOffset);
+  const periodo    = formatarPeriodo(diasSemana);
+
+  // Pega nomes dos dias com horários cadastrados
+  const diasComHorario = diasSemana.filter(d =>
+    horariosAtuais.some(h => h.dia_semana === d.nome)
+  );
+
+  if (diasComHorario.length === 0) {
+    quadro.innerHTML = `
+      <div class="semana-nav">
+        <button onclick="navegarSemana(-1)" ${semanaOffset === 0 ? 'disabled' : ''}>← Anterior</button>
+        <span>${periodo}</span>
+        <button onclick="navegarSemana(1)">Próxima →</button>
+      </div>
+      <p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px">Nenhum horário disponível nessa semana.</p>
+    `;
+    return;
+  }
+
+  // Pega horários únicos ordenados
+  const horariosUnicos = [...new Set(horariosAtuais.map(h => h.horario))].sort();
+
+  let html = `
+    <div class="semana-nav">
+      <button onclick="navegarSemana(-1)" ${semanaOffset === 0 ? 'disabled' : ''}>← Anterior</button>
+      <span>${periodo}</span>
+      <button onclick="navegarSemana(1)">Próxima →</button>
+    </div>
+    <div class="quadro-tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Horário</th>
+            ${diasComHorario.map(d => `<th class="${d.passado ? 'dia-passado' : ''}">${d.label}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  horariosUnicos.forEach(hora => {
+    const horaFormatada = hora.substring(0, 5);
+    html += `<tr><td class="hora-col">${horaFormatada}</td>`;
+
+    diasComHorario.forEach(dia => {
+      const slot = horariosAtuais.find(h => h.dia_semana === dia.nome && h.horario === hora);
+
+      if (dia.passado) {
+        html += `<td><span class="slot passado">—</span></td>`;
+      } else if (slot) {
+        if (slot.disponivel) {
+          html += `<td><button class="slot disponivel" onclick="selecionarHorario(${slot.id}, \`${dia.label} ${horaFormatada}\`, this)">✅</button></td>`;
+        } else {
+          html += `<td><button class="slot ocupado" disabled>❌</button></td>`;
+        }
+      } else {
+        html += `<td><span class="slot vazio">—</span></td>`;
+      }
+    });
+
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  quadro.innerHTML = html;
+}
+
+// ─── Seleciona horário ────────────────────────────────────────────────────────
 function selecionarHorario(id, texto, btn) {
-  // Remove seleção anterior
   document.querySelectorAll('.slot.selecionado').forEach(s => s.classList.remove('selecionado'));
   btn.classList.add('selecionado');
 
   document.getElementById('horario-selecionado-id').value  = id;
   document.getElementById('horario-selecionado-txt').value = texto;
 
-  // Mostra confirmação
   document.getElementById('confirmacao-horario').textContent = texto;
   document.getElementById('confirmacao').style.display = 'block';
   document.getElementById('btn-confirmar').style.display = 'block';
 }
 
-// ─── Confirma o agendamento ──────────────────────────────────────────────────
+// ─── Confirma agendamento ─────────────────────────────────────────────────────
 async function confirmarAgendamento() {
   const usuario   = JSON.parse(localStorage.getItem('usuario'));
   const horarioId = document.getElementById('horario-selecionado-id').value;
@@ -208,8 +286,8 @@ async function confirmarAgendamento() {
   }
 
   const btn = document.getElementById('btn-confirmar');
-  btn.disabled     = true;
-  btn.textContent  = 'Confirmando...';
+  btn.disabled    = true;
+  btn.textContent = 'Confirmando...';
 
   try {
     const resposta = await fetch(`${API_URL}/agendamentos`, {
@@ -228,8 +306,9 @@ async function confirmarAgendamento() {
         </div>
       `;
       document.getElementById('btn-confirmar').style.display = 'none';
-      // Recarrega horários para mostrar o slot como ocupado
-      const profId = document.getElementById('horario-selecionado-id').dataset.profId;
+      // Recarrega horários para mostrar slot como ocupado
+      const profId = document.getElementById('horario-prof-id').value;
+      await carregarHorarios(profId);
       setTimeout(() => fecharModal(), 3000);
     } else {
       alert(json.erro || 'Erro ao confirmar agendamento.');
@@ -242,8 +321,4 @@ async function confirmarAgendamento() {
     btn.disabled    = false;
     btn.textContent = 'Confirmar agendamento';
   }
-}
-
-function fecharModalFora(e) {
-  if (e.target.id === 'modal-overlay') fecharModal();
 }

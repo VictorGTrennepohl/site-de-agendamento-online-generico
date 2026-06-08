@@ -27,6 +27,8 @@ CREATE TABLE estabelecimentos (
 );
 
 SELECT * FROM usuarios;
+DELETE FROM usuarios WHERE email = 'hypersnakeex@gmail.com';
+UPDATE horarios SET disponivel = TRUE;
 
 CREATE TABLE horarios (
   id SERIAL PRIMARY KEY,
@@ -54,3 +56,20 @@ VALUES
 (2, 'Terça',   '08:00', TRUE),
 (2, 'Terça',   '09:00', FALSE),
 (2, 'Quarta',  '10:00', TRUE);
+
+DO $$
+DECLARE
+  prof RECORD;
+  dia TEXT;
+  hora TEXT;
+BEGIN
+  FOR prof IN SELECT id FROM usuarios WHERE tipo = 'profissional' LOOP
+    FOREACH dia IN ARRAY ARRAY['Segunda','Terça','Quarta','Quinta','Sexta'] LOOP
+      FOREACH hora IN ARRAY ARRAY['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'] LOOP
+        INSERT INTO horarios (profissional_id, dia_semana, horario, disponivel)
+        VALUES (prof.id, dia, hora::TIME, TRUE)
+        ON CONFLICT DO NOTHING;
+      END LOOP;
+    END LOOP;
+  END LOOP;
+END $$;
