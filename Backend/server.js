@@ -263,6 +263,110 @@ app.post('/api/agendamentos', async (req, res) => {
   }
 });
 
+// ─── Rota: Buscar agendamentos do cliente ─────────────────────────────────────
+app.get('/api/meus-agendamentos/:clienteId', async (req, res) => {
+  try {
+    const { clienteId } = req.params;
+    const result = await pool.query(`
+      SELECT 
+        a.id,
+        a.status,
+        a.criado_em,
+        h.dia_semana,
+        h.horario,
+        u.nome AS profissional_nome,
+        e.profissao,
+        e.nome_estab,
+        e.endereco,
+        e.bairro,
+        e.cidade,
+        e.tel_estab
+      FROM agendamentos a
+      INNER JOIN horarios h ON h.id = a.horario_id
+      INNER JOIN usuarios u ON u.id = h.profissional_id
+      INNER JOIN estabelecimentos e ON e.usuario_id = u.id
+      WHERE a.cliente_id = $1
+      ORDER BY a.criado_em DESC
+    `, [clienteId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar agendamentos.' });
+  }
+});
+
+// ─── Rota: Cancelar agendamento ───────────────────────────────────────────────
+app.put('/api/agendamentos/:id/cancelar', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const ag = await pool.query('SELECT horario_id FROM agendamentos WHERE id = $1', [id]);
+    if (ag.rows.length === 0) return res.status(404).json({ erro: 'Agendamento não encontrado.' });
+
+    await pool.query('UPDATE horarios SET disponivel = TRUE WHERE id = $1', [ag.rows[0].horario_id]);
+    await pool.query('UPDATE agendamentos SET status = $1 WHERE id = $2', ['cancelado', id]);
+
+    res.json({ mensagem: 'Agendamento cancelado com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao cancelar agendamento.' });
+  }
+});
+
+// ─── Rota: Buscar dados do usuário ────────────────────────────────────────────
+app.get('/api/usuario/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      'SELECT id, nome, email, cpf, telefone, cidade, estado, tipo FROM usuarios WHERE id = $1',
+      [id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado.' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar usuário.' });
+  }
+});
+
+// ─── Rota: Atualizar dados do usuário ─────────────────────────────────────────
+app.put('/api/usuario/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nome, telefone, cidade, estado } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE usuarios SET nome = $1, telefone = $2, cidade = $3, estado = $4 WHERE id = $5`,
+      [nome, telefone, cidade, estado, id]
+    );
+    res.json({ mensagem: 'Dados atualizados com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao atualizar dados.' });
+  }
+});
+
+// ─── Rota: Alterar senha ──────────────────────────────────────────────────────
+app.put('/api/usuario/:id/senha', async (req, res) => {
+  const { id } = req.params;
+  const { senhaAtual, novaSenha } = req.body;
+
+  try {
+    const result = await pool.query('SELECT senha FROM usuarios WHERE id = $1', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado.' });
+
+    const senhaCorreta = await bcrypt.compare(senhaAtual, result.rows[0].senha);
+    if (!senhaCorreta) return res.status(401).json({ erro: 'Senha atual incorreta.' });
+
+    const novaSenhaCriptografada = await bcrypt.hash(novaSenha, 10);
+    await pool.query('UPDATE usuarios SET senha = $1 WHERE id = $2', [novaSenhaCriptografada, id]);
+
+    res.json({ mensagem: 'Senha alterada com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao alterar senha.' });
+  }
+});
+
 // ─── Inicia o servidor ────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);

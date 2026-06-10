@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus Agendamentos — AgendaFácil</title>
+  <link rel="stylesheet" href="MeusAgendamentos.css" />
+  <link rel="shortcut icon" href="../Pagina Principal/Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    if (!localStorage.getItem('usuario')) {
+      window.location.href = '../Pagina de login/Pagina de Login.html';
+    }
+  </script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="LogoTopo">
+      <img src="../Pagina Principal/Logo.png" class="Logo" />
+      <span class="logo-text">AgendaFácil</span>
+    </div>
+    <nav class="nav-links">
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
+      <a href="../Pagina de tutorial/Comofunciona.html">Como funciona</a>
+      <a href="../Pagina de contato/contato.html">Contato</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de login/Pagina de Login.html'">Entrar</button>
+      <button class="btn-cadastro" onclick="window.location.href='../Pagina de Cadastro/CadastroUsuarios.html'">Cadastro</button>
+    </div>
+  </header>
+
+  <main class="page-wrapper">
+
+    <div class="page-header">
+      <div>
+        <h1>Meus Agendamentos</h1>
+        <p>Gerencie todos os seus horários em um só lugar</p>
+      </div>
+      <button class="btn-novo" onclick="window.location.href='../Pagina de Agendamento/Pagina Agendamento.html'">+ Novo agendamento</button>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filtros">
+      <button class="filtro-btn active" onclick="filtrar(this, 'todos')">Todos</button>
+      <button class="filtro-btn" onclick="filtrar(this, 'confirmado')">Confirmados</button>
+      <button class="filtro-btn" onclick="filtrar(this, 'cancelado')">Cancelados</button>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Carregando agendamentos...</p>
+    </div>
+
+    <!-- LISTA -->
+    <div class="agendamentos-lista" id="lista"></div>
+
+    <!-- VAZIO -->
+    <div class="vazio" id="vazio" style="display:none;">
+      <div class="vazio-icon">📅</div>
+      <h3>Nenhum agendamento encontrado</h3>
+      <p>Você ainda não fez nenhum agendamento.</p>
+      <button class="btn-novo" onclick="window.location.href='../Pagina de Agendamento/Pagina Agendamento.html'">Agendar agora</button>
+    </div>
+
+  </main>
+
+  <script src="MeusAgendamentos.js"></script>
+  <script src="../../auth.js"></script>
+
+</body>
+</html>

@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
           <span class="user-seta">▾</span>
         </button>
         <div class="user-dropdown" id="user-dropdown">
-          <a href="../Pagina de agendamento/agendar.html">📅 Agendar</a>
-          <a href="../Pagina de agendamentos/agendamentos.html">📋 Meus agendamentos</a>
-          <a href="#">⚙️ Configurações</a>
+          <a href="../Pagina Agendamento/Pagina Agendamento.html">📅 Agendar</a>
+          <a href="../Meus agendamentos/Meus agendamentos.html">📋 Meus agendamentos</a>
+          <a href="../Pagina de configuracoes/PaginaConfiguracoes.html">⚙️ Configurações</a>
           <div class="dropdown-divider"></div>
           <a href="#" onclick="sairConta()" class="sair">🚪 Sair da conta</a>
         </div>

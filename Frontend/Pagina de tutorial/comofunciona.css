@@ -417,3 +417,62 @@ body {
   .vantagens-grid { grid-template-columns: 1fr; }
   .cta-btns { flex-direction: column; align-items: center; }
 }
+
+/* ===========================
+   USER MENU (auth.js)
+=========================== */
+.user-menu { position: relative; }
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.user-btn:hover { background: rgba(255,255,255,0.14); }
+
+.user-avatar {
+  width: 26px;
+  height: 26px;
+  background: #2979ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.user-seta { font-size: 0.75rem; opacity: 0.7; }
+
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: rgba(10,25,70,0.97);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 200px;
+  z-index: 200;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.user-dropdown.aberto { display: flex; flex-direction: column; }
+.user-dropdown a { color: rgba(255,255,255,0.8); text-decoration: none; padding: 10px 14px; border-radius: 7px; font-size: 0.88rem; font-weight: 500; transition: background 0.15s, color 0.15s; }
+.user-dropdown a:hover { background: rgba(41,121,255,0.2); color: #fff; }
+.user-dropdown a.sair { color: #f87171; }
+.user-dropdown a.sair:hover { background: rgba(239,68,68,0.15); }
+.dropdown-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0; }
