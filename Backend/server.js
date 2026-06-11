@@ -367,6 +367,21 @@ app.put('/api/usuario/:id/senha', async (req, res) => {
   }
 });
 
+// ─── Rota: Buscar estabelecimentos do profissional ────────────────────────────
+app.get('/api/meus-estabelecimentos/:usuarioId', async (req, res) => {
+  try {
+    const { usuarioId } = req.params;
+    const result = await pool.query(
+      `SELECT * FROM estabelecimentos WHERE usuario_id = $1`,
+      [usuarioId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar estabelecimentos.' });
+  }
+});
+
 // ─── Inicia o servidor ────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);

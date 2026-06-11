@@ -38,6 +38,26 @@ function toggleMenu() {
   });
 }
 
+if (usuario) {
+  navActions.innerHTML = `
+    <div class="user-menu">
+      <button class="user-btn" onclick="toggleMenu()">
+        <span class="user-avatar">${usuario.nome.charAt(0).toUpperCase()}</span>
+        <span class="user-nome">${usuario.nome.split(' ')[0]}</span>
+        <span class="user-seta">▾</span>
+      </button>
+      <div class="user-dropdown" id="user-dropdown">
+        <a href="../Pagina de Agendamento/Pagina Agendamento.html">📅 Agendar</a>
+        <a href="../Pagina de Meus Agendamentos/MeusAgendamentos.html">📋 Meus agendamentos</a>
+        ${usuario.tipo === 'profissional' ? `<a href="../Meus estabelecimentos/meusEstabelecimentos.html">🏢 Meus estabelecimentos</a>` : ''}
+        <a href="../Pagina de Configuracoes/Configuracoes.html">⚙️ Configurações</a>
+        <div class="dropdown-divider"></div>
+        <a href="#" onclick="sairConta()" class="sair">🚪 Sair da conta</a>
+      </div>
+    </div>
+  `;
+}
+
 function sairConta() {
   localStorage.removeItem('usuario');
   window.location.reload();

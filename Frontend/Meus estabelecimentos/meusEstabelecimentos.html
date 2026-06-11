@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meus Agendamentos — AgendaFácil</title>
-  <link rel="stylesheet" href="MeusAgendamentos.css" />
+  <title>Meus Estabelecimentos — AgendaFácil</title>
+  <link rel="stylesheet" href="MeusEstabelecimentos.css" />
   <link rel="shortcut icon" href="../Pagina Principal/Logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <script>
-    if (!localStorage.getItem('usuario')) {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario) {
       window.location.href = '../Pagina de login/Pagina de Login.html';
+    } else if (usuario.tipo !== 'profissional') {
+      window.location.href = '../Pagina Principal/Pagina_Principal.html';
     }
   </script>
 </head>
@@ -35,39 +38,30 @@
 
     <div class="page-header">
       <div>
-        <h1>Meus Agendamentos</h1>
-        <p>Gerencie todos os seus horários em um só lugar</p>
+        <h1>Meus Estabelecimentos</h1>
+        <p>Gerencie os estabelecimentos vinculados à sua conta</p>
       </div>
-      <button class="btn-novo" onclick="window.location.href='../Pagina Agendamento/Pagina Agendamento.html'">+ Novo agendamento</button>
-    </div>
-
-    <!-- FILTROS -->
-    <div class="filtros">
-      <button class="filtro-btn active" onclick="filtrar(this, 'todos')">Todos</button>
-      <button class="filtro-btn" onclick="filtrar(this, 'confirmado')">Confirmados</button>
-      <button class="filtro-btn" onclick="filtrar(this, 'cancelado')">Cancelados</button>
     </div>
 
     <!-- LOADING -->
     <div class="loading" id="loading">
       <div class="spinner"></div>
-      <p>Carregando agendamentos...</p>
+      <p>Carregando estabelecimentos...</p>
     </div>
 
     <!-- LISTA -->
-    <div class="agendamentos-lista" id="lista"></div>
+    <div class="estab-lista" id="lista"></div>
 
     <!-- VAZIO -->
     <div class="vazio" id="vazio" style="display:none;">
-      <div class="vazio-icon">📅</div>
-      <h3>Nenhum agendamento encontrado</h3>
-      <p>Você ainda não fez nenhum agendamento.</p>
-      <button class="btn-novo" onclick="window.location.href='../Pagina de Agendamento/Pagina Agendamento.html'">Agendar agora</button>
+      <div class="vazio-icon">🏢</div>
+      <h3>Nenhum estabelecimento encontrado</h3>
+      <p>Você ainda não possui estabelecimentos cadastrados.</p>
     </div>
 
   </main>
 
-  <script src="MeusAgendamentos.js"></script>
+  <script src="MeusEstabelecimentos.js"></script>
   <script src="../../auth.js"></script>
 
 </body>
