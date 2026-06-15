@@ -382,7 +382,53 @@ app.get('/api/meus-estabelecimentos/:usuarioId', async (req, res) => {
   }
 });
 
-// ─── Inicia o servidor ────────────────────────────────────────────────────────
+// ─── Rota: Agendamentos recebidos pelo profissional ───────────────────────────
+app.get('/api/agendamentos-profissional/:profissionalId', async (req, res) => {
+  try {
+    const { profissionalId } = req.params;
+    const result = await pool.query(`
+      SELECT 
+        a.id,
+        a.status,
+        a.criado_em,
+        h.dia_semana,
+        h.horario,
+        u.nome AS cliente_nome,
+        u.telefone AS cliente_telefone,
+        u.email AS cliente_email
+      FROM agendamentos a
+      INNER JOIN horarios h ON h.id = a.horario_id
+      INNER JOIN usuarios u ON u.id = a.cliente_id
+      WHERE h.profissional_id = $1
+      ORDER BY a.criado_em DESC
+    `, [profissionalId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar agendamentos.' });
+  }
+});
+
+// Edição do estabalecimento
+app.put('/api/estabelecimento/:usuarioId', async (req, res) => {
+  const { usuarioId } = req.params;
+  const { profissao, nome_estab, cnpj, tel_estab, endereco, bairro, cidade, cep, descricao } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE estabelecimentos SET 
+        profissao = $1, nome_estab = $2, cnpj = $3, tel_estab = $4,
+        endereco = $5, bairro = $6, cidade = $7, cep = $8, descricao = $9
+       WHERE usuario_id = $10`,
+      [profissao, nome_estab, cnpj, tel_estab, endereco, bairro, cidade, cep, descricao, usuarioId]
+    );
+    res.json({ mensagem: 'Estabelecimento atualizado com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao atualizar estabelecimento.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });

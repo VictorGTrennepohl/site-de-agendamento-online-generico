@@ -1,12 +1,14 @@
 const API_URL = 'http://localhost:3000/api';
 
+let todosAgendamentosModal = [];
+
 document.addEventListener('DOMContentLoaded', async function () {
   const usuario = JSON.parse(localStorage.getItem('usuario'));
   if (!usuario || usuario.tipo !== 'profissional') return;
   await carregarEstabelecimentos(usuario.id);
 });
 
-// ─── Carrega estabelecimentos do banco ────────────────────────────────────────
+// ─── Carrega estabelecimentos ─────────────────────────────────────────────────
 async function carregarEstabelecimentos(usuarioId) {
   const loading = document.getElementById('loading');
   const lista   = document.getElementById('lista');
@@ -36,6 +38,10 @@ async function carregarEstabelecimentos(usuarioId) {
           <div class="estab-info">
             <div class="estab-nome">${estab.nome_estab || 'Sem nome'}</div>
             <div class="estab-area">${estab.profissao || ''}</div>
+          </div>
+          <div class="estab-acoes">
+            <button class="btn-editar" onclick="abrirEditar(${JSON.stringify(estab).replace(/"/g, '&quot;')})">✏️ Editar</button>
+            <button class="btn-ver-agendamentos" onclick="abrirAgendamentos()">📋 Agendamentos</button>
           </div>
         </div>
 
@@ -74,7 +80,163 @@ async function carregarEstabelecimentos(usuarioId) {
     console.error(err);
     loading.style.display = 'none';
     vazio.style.display   = 'flex';
-    vazio.querySelector('h3').textContent = 'Erro ao carregar estabelecimentos.';
-    vazio.querySelector('p').textContent  = 'Verifique se o servidor está rodando.';
   }
+}
+
+// ─── Abre modal de edição ─────────────────────────────────────────────────────
+function abrirEditar(estab) {
+  document.getElementById('edit-profissao').value   = estab.profissao   || '';
+  document.getElementById('edit-nome-estab').value  = estab.nome_estab  || '';
+  document.getElementById('edit-cnpj').value        = estab.cnpj        || '';
+  document.getElementById('edit-tel').value         = estab.tel_estab   || '';
+  document.getElementById('edit-endereco').value    = estab.endereco    || '';
+  document.getElementById('edit-bairro').value      = estab.bairro      || '';
+  document.getElementById('edit-cidade').value      = estab.cidade      || '';
+  document.getElementById('edit-cep').value         = estab.cep         || '';
+  document.getElementById('edit-descricao').value   = estab.descricao   || '';
+  document.getElementById('alerta-editar').innerHTML = '';
+
+  document.getElementById('modal-editar').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// ─── Salva alterações do estabelecimento ──────────────────────────────────────
+async function salvarEstabelecimento(e) {
+  e.preventDefault();
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+  const dados = {
+    profissao:  document.getElementById('edit-profissao').value,
+    nome_estab: document.getElementById('edit-nome-estab').value.trim(),
+    cnpj:       document.getElementById('edit-cnpj').value.trim(),
+    tel_estab:  document.getElementById('edit-tel').value.trim(),
+    endereco:   document.getElementById('edit-endereco').value.trim(),
+    bairro:     document.getElementById('edit-bairro').value.trim(),
+    cidade:     document.getElementById('edit-cidade').value.trim(),
+    cep:        document.getElementById('edit-cep').value.trim(),
+    descricao:  document.getElementById('edit-descricao').value.trim(),
+  };
+
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled    = true;
+  btn.textContent = 'Salvando...';
+
+  try {
+    const resposta = await fetch(`${API_URL}/estabelecimento/${usuario.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados),
+    });
+
+    const json = await resposta.json();
+
+    if (resposta.ok) {
+      mostrarAlerta('alerta-editar', '✅ Estabelecimento atualizado com sucesso!', 'sucesso');
+      setTimeout(() => {
+        fecharModalId('modal-editar');
+        carregarEstabelecimentos(usuario.id);
+      }, 1500);
+    } else {
+      mostrarAlerta('alerta-editar', json.erro || 'Erro ao salvar.', 'erro');
+    }
+  } catch (err) {
+    mostrarAlerta('alerta-editar', 'Não foi possível conectar ao servidor.', 'erro');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Salvar alterações';
+  }
+}
+
+// ─── Abre modal de agendamentos ───────────────────────────────────────────────
+async function abrirAgendamentos() {
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+  document.getElementById('modal-agendamentos').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modal-loading').style.display = 'flex';
+  document.getElementById('modal-lista').innerHTML = '';
+  document.getElementById('modal-vazio').style.display = 'none';
+
+  try {
+    const resposta = await fetch(`${API_URL}/agendamentos-profissional/${usuario.id}`);
+    todosAgendamentosModal = await resposta.json();
+    renderizarAgendamentosModal(todosAgendamentosModal);
+  } catch (err) {
+    document.getElementById('modal-loading').style.display = 'none';
+    document.getElementById('modal-vazio').style.display = 'block';
+  }
+}
+
+// ─── Renderiza agendamentos no modal ──────────────────────────────────────────
+function renderizarAgendamentosModal(lista) {
+  const container = document.getElementById('modal-lista');
+  const loading   = document.getElementById('modal-loading');
+  const vazio     = document.getElementById('modal-vazio');
+
+  loading.style.display = 'none';
+  container.innerHTML   = '';
+
+  if (lista.length === 0) {
+    vazio.style.display = 'block';
+    return;
+  }
+
+  vazio.style.display = 'none';
+
+  lista.forEach(ag => {
+    const horario     = ag.horario ? ag.horario.substring(0, 5) : '';
+    const statusClass = ag.status === 'cancelado' ? 'cancelado' : 'confirmado';
+    const statusLabel = ag.status === 'cancelado' ? 'Cancelado' : 'Confirmado';
+
+    const item = document.createElement('div');
+    item.className = 'ag-item';
+    item.dataset.status = statusClass;
+    item.innerHTML = `
+      <div class="ag-item-info">
+        <div class="ag-item-topo">
+          <span class="ag-item-cliente">👤 ${ag.cliente_nome}</span>
+          <span class="status ${statusClass}">${statusLabel}</span>
+        </div>
+        <div class="ag-item-detalhes">
+          <span>📅 ${ag.dia_semana}</span>
+          <span>⏰ ${horario}</span>
+          ${ag.cliente_telefone ? `<span>📞 ${ag.cliente_telefone}</span>` : ''}
+          ${ag.cliente_email ? `<span>✉️ ${ag.cliente_email}</span>` : ''}
+        </div>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+// ─── Filtra agendamentos no modal ─────────────────────────────────────────────
+function filtrarModal(btn, status) {
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const filtrados = status === 'todos'
+    ? todosAgendamentosModal
+    : todosAgendamentosModal.filter(ag => {
+        const s = ag.status === 'cancelado' ? 'cancelado' : 'confirmado';
+        return s === status;
+      });
+
+  renderizarAgendamentosModal(filtrados);
+}
+
+// ─── Utilitários de modal ─────────────────────────────────────────────────────
+function fecharModalId(id) {
+  document.getElementById(id).style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function fecharModalFora(e, id) {
+  if (e.target.id === id) fecharModalId(id);
+}
+
+// ─── Alerta ───────────────────────────────────────────────────────────────────
+function mostrarAlerta(elementId, mensagem, tipo) {
+  const div = document.getElementById(elementId);
+  div.innerHTML = `<div class="alerta ${tipo}">${mensagem}</div>`;
+  setTimeout(() => div.innerHTML = '', 4000);
 }

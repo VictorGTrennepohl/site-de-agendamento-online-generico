@@ -39,20 +39,17 @@
     <div class="page-header">
       <div>
         <h1>Meus Estabelecimentos</h1>
-        <p>Gerencie os estabelecimentos vinculados à sua conta</p>
+        <p>Gerencie os estabelecimentos e veja os agendamentos recebidos</p>
       </div>
     </div>
 
-    <!-- LOADING -->
     <div class="loading" id="loading">
       <div class="spinner"></div>
       <p>Carregando estabelecimentos...</p>
     </div>
 
-    <!-- LISTA -->
     <div class="estab-lista" id="lista"></div>
 
-    <!-- VAZIO -->
     <div class="vazio" id="vazio" style="display:none;">
       <div class="vazio-icon">🏢</div>
       <h3>Nenhum estabelecimento encontrado</h3>
@@ -60,6 +57,104 @@
     </div>
 
   </main>
+
+  <!-- MODAL AGENDAMENTOS -->
+  <div class="modal-overlay" id="modal-agendamentos" onclick="fecharModalFora(event, 'modal-agendamentos')">
+    <div class="modal">
+      <button class="modal-fechar" onclick="fecharModalId('modal-agendamentos')">✕</button>
+      <h2 class="modal-titulo">📋 Agendamentos recebidos</h2>
+
+      <div class="modal-filtros">
+        <button class="filtro-btn active" onclick="filtrarModal(this, 'todos')">Todos</button>
+        <button class="filtro-btn" onclick="filtrarModal(this, 'confirmado')">Confirmados</button>
+        <button class="filtro-btn" onclick="filtrarModal(this, 'cancelado')">Cancelados</button>
+      </div>
+
+      <div class="modal-loading" id="modal-loading">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+      </div>
+
+      <div class="modal-lista" id="modal-lista"></div>
+
+      <div class="modal-vazio" id="modal-vazio" style="display:none;">
+        <p>Nenhum agendamento encontrado.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR ESTABELECIMENTO -->
+  <div class="modal-overlay" id="modal-editar" onclick="fecharModalFora(event, 'modal-editar')">
+    <div class="modal modal-editar-inner">
+      <button class="modal-fechar" onclick="fecharModalId('modal-editar')">✕</button>
+      <h2 class="modal-titulo">✏️ Editar Estabelecimento</h2>
+
+      <form onsubmit="salvarEstabelecimento(event)">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Área de atuação</label>
+            <select id="edit-profissao">
+              <option>Médico</option>
+              <option>Dentista</option>
+              <option>Psicólogo</option>
+              <option>Cabeleireiro</option>
+              <option>Manicure</option>
+              <option>Mecânico</option>
+              <option>Professor</option>
+              <option>Veterinário</option>
+              <option>Nutricionista</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nome do estabelecimento</label>
+            <input type="text" id="edit-nome-estab" placeholder="Nome do estabelecimento" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>CNPJ <span class="opcional">(opcional)</span></label>
+            <input type="text" id="edit-cnpj" placeholder="00.000.000/0000-00" maxlength="18" />
+          </div>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="text" id="edit-tel" placeholder="(00) 00000-0000" maxlength="15" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Endereço</label>
+          <input type="text" id="edit-endereco" placeholder="Rua, número, complemento..." />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" id="edit-bairro" placeholder="Bairro" />
+          </div>
+          <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" id="edit-cidade" placeholder="Cidade" />
+          </div>
+          <div class="form-group" style="max-width:110px;">
+            <label>CEP</label>
+            <input type="text" id="edit-cep" placeholder="00000-000" maxlength="9" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descrição <span class="opcional">(opcional)</span></label>
+          <textarea id="edit-descricao" placeholder="Descreva os serviços oferecidos..."></textarea>
+        </div>
+
+        <div id="alerta-editar"></div>
+        <button type="submit" class="btn-salvar">Salvar alterações</button>
+
+      </form>
+    </div>
+  </div>
 
   <script src="MeusEstabelecimentos.js"></script>
   <script src="../../auth.js"></script>

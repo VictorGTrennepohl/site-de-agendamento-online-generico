@@ -1,0 +1,28 @@
+cadastro Profissional:
+Aqui vai um profissional fictício para testar:
+Dados pessoais:
+
+antes:
+Nome: Carlos Eduardo Silva
+
+depois:
+Nome: Carlos Eduardo Pereira Silva
+
+CPF: 123.456.789-00
+E-mail: carlos.silva@email.com
+Telefone: (49) 99876-5432
+Senha: Senha123!
+Cidade: Chapecó
+Estado: SC
+
+Dados do estabelecimento:
+
+Área de atuação: Médico
+Nome do estabelecimento: Clínica Saúde Total
+CNPJ: 12.345.678/0001-90
+Telefone do estabelecimento: (49) 3322-1100
+Endereço: Rua das Flores, 245
+Bairro: Centro
+Cidade: Chapecó
+CEP: 89801-000
+Descrição: Clínica médica especializada em clínica geral e medicina preventiva. Atendimento humanizado e agendamento rápido.
