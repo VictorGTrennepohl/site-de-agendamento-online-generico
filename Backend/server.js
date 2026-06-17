@@ -429,6 +429,41 @@ app.put('/api/estabelecimento/:usuarioId', async (req, res) => {
   }
 });
 
+// ─── Rota: Cadastrar novo estabelecimento ─────────────────────────────────────
+app.post('/api/estabelecimento', async (req, res) => {
+  const { usuarioId, profissao, nome_estab, cnpj, tel_estab, endereco, bairro, cidade, cep, descricao } = req.body;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO estabelecimentos 
+        (usuario_id, profissao, nome_estab, cnpj, tel_estab, endereco, bairro, cidade, cep, descricao)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
+      [usuarioId, profissao, nome_estab, cnpj, tel_estab, endereco, bairro, cidade, cep, descricao]
+    );
+
+    const novoEstabId = result.rows[0].id;
+
+    // Cria horários padrão automaticamente
+    const dias     = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+    const horarios = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+
+    for (const dia of dias) {
+      for (const horario of horarios) {
+        await pool.query(
+          `INSERT INTO horarios (profissional_id, dia_semana, horario, disponivel)
+           VALUES ($1, $2, $3, TRUE)`,
+          [usuarioId, dia, horario]
+        );
+      }
+    }
+
+    res.status(201).json({ mensagem: 'Estabelecimento cadastrado com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao cadastrar estabelecimento.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Meus Estabelecimentos — AgendaFácil</title>
-  <link rel="stylesheet" href="MeusEstabelecimentos.css" />
+  <link rel="stylesheet" href="meusEstabelecimentos.css" />
   <link rel="shortcut icon" href="../Pagina Principal/Logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <script>
@@ -41,6 +41,7 @@
         <h1>Meus Estabelecimentos</h1>
         <p>Gerencie os estabelecimentos e veja os agendamentos recebidos</p>
       </div>
+      <button class="btn-novo" onclick="abrirCadastro()">+ Novo estabelecimento</button>
     </div>
 
     <div class="loading" id="loading">
@@ -53,7 +54,7 @@
     <div class="vazio" id="vazio" style="display:none;">
       <div class="vazio-icon">🏢</div>
       <h3>Nenhum estabelecimento encontrado</h3>
-      <p>Você ainda não possui estabelecimentos cadastrados.</p>
+      <p>Clique em "Novo estabelecimento" para cadastrar.</p>
     </div>
 
   </main>
@@ -63,48 +64,30 @@
     <div class="modal">
       <button class="modal-fechar" onclick="fecharModalId('modal-agendamentos')">✕</button>
       <h2 class="modal-titulo">📋 Agendamentos recebidos</h2>
-
       <div class="modal-filtros">
         <button class="filtro-btn active" onclick="filtrarModal(this, 'todos')">Todos</button>
         <button class="filtro-btn" onclick="filtrarModal(this, 'confirmado')">Confirmados</button>
         <button class="filtro-btn" onclick="filtrarModal(this, 'cancelado')">Cancelados</button>
       </div>
-
-      <div class="modal-loading" id="modal-loading">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-      </div>
-
+      <div class="modal-loading" id="modal-loading"><div class="spinner"></div><p>Carregando...</p></div>
       <div class="modal-lista" id="modal-lista"></div>
-
-      <div class="modal-vazio" id="modal-vazio" style="display:none;">
-        <p>Nenhum agendamento encontrado.</p>
-      </div>
+      <div class="modal-vazio" id="modal-vazio" style="display:none;"><p>Nenhum agendamento encontrado.</p></div>
     </div>
   </div>
 
-  <!-- MODAL EDITAR ESTABELECIMENTO -->
+  <!-- MODAL EDITAR -->
   <div class="modal-overlay" id="modal-editar" onclick="fecharModalFora(event, 'modal-editar')">
-    <div class="modal modal-editar-inner">
+    <div class="modal modal-form">
       <button class="modal-fechar" onclick="fecharModalId('modal-editar')">✕</button>
       <h2 class="modal-titulo">✏️ Editar Estabelecimento</h2>
-
       <form onsubmit="salvarEstabelecimento(event)">
-
         <div class="form-row">
           <div class="form-group">
             <label>Área de atuação</label>
             <select id="edit-profissao">
-              <option>Médico</option>
-              <option>Dentista</option>
-              <option>Psicólogo</option>
-              <option>Cabeleireiro</option>
-              <option>Manicure</option>
-              <option>Mecânico</option>
-              <option>Professor</option>
-              <option>Veterinário</option>
-              <option>Nutricionista</option>
-              <option>Outro</option>
+              <option>Médico</option><option>Dentista</option><option>Psicólogo</option>
+              <option>Cabeleireiro</option><option>Manicure</option><option>Mecânico</option>
+              <option>Professor</option><option>Veterinário</option><option>Nutricionista</option><option>Outro</option>
             </select>
           </div>
           <div class="form-group">
@@ -112,7 +95,6 @@
             <input type="text" id="edit-nome-estab" placeholder="Nome do estabelecimento" />
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label>CNPJ <span class="opcional">(opcional)</span></label>
@@ -123,12 +105,10 @@
             <input type="text" id="edit-tel" placeholder="(00) 00000-0000" maxlength="15" />
           </div>
         </div>
-
         <div class="form-group">
           <label>Endereço</label>
           <input type="text" id="edit-endereco" placeholder="Rua, número, complemento..." />
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label>Bairro</label>
@@ -143,15 +123,71 @@
             <input type="text" id="edit-cep" placeholder="00000-000" maxlength="9" />
           </div>
         </div>
-
         <div class="form-group">
           <label>Descrição <span class="opcional">(opcional)</span></label>
           <textarea id="edit-descricao" placeholder="Descreva os serviços oferecidos..."></textarea>
         </div>
-
         <div id="alerta-editar"></div>
         <button type="submit" class="btn-salvar">Salvar alterações</button>
+      </form>
+    </div>
+  </div>
 
+  <!-- MODAL CADASTRAR -->
+  <div class="modal-overlay" id="modal-cadastrar" onclick="fecharModalFora(event, 'modal-cadastrar')">
+    <div class="modal modal-form">
+      <button class="modal-fechar" onclick="fecharModalId('modal-cadastrar')">✕</button>
+      <h2 class="modal-titulo">🏢 Novo Estabelecimento</h2>
+      <form onsubmit="cadastrarEstabelecimento(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Área de atuação</label>
+            <select id="novo-profissao">
+              <option value="">Selecione...</option>
+              <option>Médico</option><option>Dentista</option><option>Psicólogo</option>
+              <option>Cabeleireiro</option><option>Manicure</option><option>Mecânico</option>
+              <option>Professor</option><option>Veterinário</option><option>Nutricionista</option><option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nome do estabelecimento</label>
+            <input type="text" id="novo-nome-estab" placeholder="Nome do estabelecimento" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>CNPJ <span class="opcional">(opcional)</span></label>
+            <input type="text" id="novo-cnpj" placeholder="00.000.000/0000-00" maxlength="18" />
+          </div>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="text" id="novo-tel" placeholder="(00) 00000-0000" maxlength="15" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Endereço</label>
+          <input type="text" id="novo-endereco" placeholder="Rua, número, complemento..." required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" id="novo-bairro" placeholder="Bairro" />
+          </div>
+          <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" id="novo-cidade" placeholder="Cidade" required />
+          </div>
+          <div class="form-group" style="max-width:110px;">
+            <label>CEP</label>
+            <input type="text" id="novo-cep" placeholder="00000-000" maxlength="9" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descrição <span class="opcional">(opcional)</span></label>
+          <textarea id="novo-descricao" placeholder="Descreva os serviços oferecidos..."></textarea>
+        </div>
+        <div id="alerta-cadastrar"></div>
+        <button type="submit" class="btn-salvar">Cadastrar estabelecimento</button>
       </form>
     </div>
   </div>

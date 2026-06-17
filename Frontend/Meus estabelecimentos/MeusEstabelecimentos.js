@@ -240,3 +240,72 @@ function mostrarAlerta(elementId, mensagem, tipo) {
   div.innerHTML = `<div class="alerta ${tipo}">${mensagem}</div>`;
   setTimeout(() => div.innerHTML = '', 4000);
 }
+
+// ─── Abre modal de cadastro ───────────────────────────────────────────────────
+function abrirCadastro() {
+  document.getElementById('novo-profissao').value   = '';
+  document.getElementById('novo-nome-estab').value  = '';
+  document.getElementById('novo-cnpj').value        = '';
+  document.getElementById('novo-tel').value         = '';
+  document.getElementById('novo-endereco').value    = '';
+  document.getElementById('novo-bairro').value      = '';
+  document.getElementById('novo-cidade').value      = '';
+  document.getElementById('novo-cep').value         = '';
+  document.getElementById('novo-descricao').value   = '';
+  document.getElementById('alerta-cadastrar').innerHTML = '';
+
+  document.getElementById('modal-cadastrar').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// ─── Cadastra novo estabelecimento ────────────────────────────────────────────
+async function cadastrarEstabelecimento(e) {
+  e.preventDefault();
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+  const dados = {
+    usuarioId:  usuario.id,
+    profissao:  document.getElementById('novo-profissao').value,
+    nome_estab: document.getElementById('novo-nome-estab').value.trim(),
+    cnpj:       document.getElementById('novo-cnpj').value.trim(),
+    tel_estab:  document.getElementById('novo-tel').value.trim(),
+    endereco:   document.getElementById('novo-endereco').value.trim(),
+    bairro:     document.getElementById('novo-bairro').value.trim(),
+    cidade:     document.getElementById('novo-cidade').value.trim(),
+    cep:        document.getElementById('novo-cep').value.trim(),
+    descricao:  document.getElementById('novo-descricao').value.trim(),
+  };
+
+  if (!dados.profissao || !dados.nome_estab || !dados.tel_estab || !dados.endereco || !dados.cidade) {
+    return mostrarAlerta('alerta-cadastrar', 'Preencha todos os campos obrigatórios.', 'erro');
+  }
+
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled    = true;
+  btn.textContent = 'Cadastrando...';
+
+  try {
+    const resposta = await fetch(`${API_URL}/estabelecimento`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados),
+    });
+
+    const json = await resposta.json();
+
+    if (resposta.ok) {
+      mostrarAlerta('alerta-cadastrar', '✅ Estabelecimento cadastrado com sucesso!', 'sucesso');
+      setTimeout(() => {
+        fecharModalId('modal-cadastrar');
+        carregarEstabelecimentos(usuario.id);
+      }, 1500);
+    } else {
+      mostrarAlerta('alerta-cadastrar', json.erro || 'Erro ao cadastrar.', 'erro');
+    }
+  } catch (err) {
+    mostrarAlerta('alerta-cadastrar', 'Não foi possível conectar ao servidor.', 'erro');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Cadastrar estabelecimento';
+  }
+}
