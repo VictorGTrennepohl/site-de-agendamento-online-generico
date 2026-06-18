@@ -465,5 +465,25 @@ body {
   margin-bottom: 12px;
 }
 
+.btn-novo {
+  background: var(--blue-bright);
+  border: none;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.btn-novo:hover { background: var(--blue-hover); transform: translateY(-1px); }
+
+.modal-form {
+  max-width: 720px;
+}
+
 .alerta.sucesso { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; }
 .alerta.erro { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; }
