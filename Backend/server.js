@@ -464,6 +464,26 @@ app.post('/api/estabelecimento', async (req, res) => {
   }
 });
 
+// ─── Rota: Serviços mais agendados ───────────────────────────────────────────
+app.get('/api/servicos-populares', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT e.profissao, COUNT(a.id) AS total
+      FROM agendamentos a
+      INNER JOIN horarios h ON h.id = a.horario_id
+      INNER JOIN estabelecimentos e ON e.usuario_id = h.profissional_id
+      WHERE a.status != 'cancelado'
+      GROUP BY e.profissao
+      ORDER BY total DESC
+      LIMIT 5
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar serviços populares.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
