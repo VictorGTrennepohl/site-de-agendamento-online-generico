@@ -41,7 +41,7 @@
         <div class="info-ico">📧</div>
         <div>
           <div class="info-label">E-mail</div>
-          <div class="info-val">contato@agendafacil.com.br</div>
+          <div class="info-val">victor.gar.tren@gmail.com</div>
         </div>
       </div>
 
@@ -49,7 +49,7 @@
         <div class="info-ico">📞</div>
         <div>
           <div class="info-label">Telefone / WhatsApp</div>
-          <div class="info-val">(48) 99999-0000</div>
+          <div class="info-val">(43) 99616-3654</div>
         </div>
       </div>
 
@@ -76,7 +76,6 @@
           <div class="social-row">
             <button class="btn-social">Instagram</button>
             <button class="btn-social">LinkedIn</button>
-            <button class="btn-social">Facebook</button>
           </div>
         </div>
       </div>
@@ -86,7 +85,7 @@
     <div class="form-col">
       <h2>Envie uma mensagem</h2>
 
-      <form class="contato-form" onsubmit="enviarForm(event)">
+      <form class="contato-form">
 
         <div class="form-row">
           <div class="form-group">
@@ -132,16 +131,7 @@
 
   </main>
 
-  <script>
-    function enviarForm(e) {
-      e.preventDefault();
-      document.getElementById('sucesso').style.display = 'block';
-      e.target.reset();
-      setTimeout(() => {
-        document.getElementById('sucesso').style.display = 'none';
-      }, 5000);
-    }
-  </script>
+  <script src="paginacontato.js"></script>
   <script src="../../auth.js"></script>
 </body>
 </html>

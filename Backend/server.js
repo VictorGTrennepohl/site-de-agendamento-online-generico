@@ -484,6 +484,40 @@ app.get('/api/servicos-populares', async (req, res) => {
   }
 });
 
+// ─── Rota: Enviar mensagem de contato ─────────────────────────────────────────
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+app.post('/api/contato', async (req, res) => {
+  const { nome, email, telefone, assunto, mensagem } = req.body;
+
+  if (!nome || !email || !assunto || !mensagem) {
+    return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
+  }
+
+  try {
+    await resend.emails.send({
+      from:    'onboarding@resend.dev',
+      to:      process.env.EMAIL_DESTINO,
+      subject: `[AgendaFácil] ${assunto}`,
+      html: `
+        <h2>Nova mensagem de contato</h2>
+        <p><strong>Nome:</strong> ${nome}</p>
+        <p><strong>E-mail:</strong> ${email}</p>
+        <p><strong>Telefone:</strong> ${telefone || 'Não informado'}</p>
+        <p><strong>Assunto:</strong> ${assunto}</p>
+        <p><strong>Mensagem:</strong></p>
+        <p>${mensagem}</p>
+      `,
+    });
+
+    res.json({ mensagem: 'Mensagem enviada com sucesso!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ erro: 'Erro ao enviar mensagem.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });

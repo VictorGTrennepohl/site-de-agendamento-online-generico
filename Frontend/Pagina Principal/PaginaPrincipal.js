@@ -25,7 +25,15 @@ async function carregarServicosPopulares() {
     const grid = document.querySelector('.services-grid');
     if (!grid) return;
 
-    if (dados.length === 0) return; // mantém os cards padrão se não houver dados
+    if (dados.length === 0) {
+      grid.innerHTML = `
+        <div class="servicos-vazio">
+          
+          <p>Nenhum serviço agendado ainda.</p>
+        </div>
+      `;
+      return;
+    }
 
     grid.innerHTML = '';
 
