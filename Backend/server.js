@@ -491,12 +491,17 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 app.post('/api/contato', async (req, res) => {
   const { nome, email, telefone, assunto, mensagem } = req.body;
 
+  console.log('Dados recebidos:', { nome, email, assunto });
+  console.log('Enviando para:', process.env.EMAIL_DESTINO);
+  console.log('API Key:', process.env.RESEND_API_KEY);
+
   if (!nome || !email || !assunto || !mensagem) {
     return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
   }
 
-  try {
-    await resend.emails.send({
+  // DEPOIS
+try {
+    const resultado = await resend.emails.send({
       from:    'onboarding@resend.dev',
       to:      process.env.EMAIL_DESTINO,
       subject: `[AgendaFácil] ${assunto}`,
@@ -511,10 +516,73 @@ app.post('/api/contato', async (req, res) => {
       `,
     });
 
+    console.log('Resultado Resend:', resultado);
+
     res.json({ mensagem: 'Mensagem enviada com sucesso!' });
   } catch (err) {
-    console.error(err);
+    console.error('Erro Resend:', err);
     res.status(500).json({ erro: 'Erro ao enviar mensagem.' });
+  }
+});
+
+// ─── Rota: Buscar avaliações ──────────────────────────────────────────────────
+app.get('/api/avaliacoes', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT a.id, a.nota, a.comentario, a.criado_em,
+             u.nome AS cliente_nome,
+             p.nome AS profissional_nome,
+             e.profissao, e.nome_estab
+      FROM avaliacoes a
+      INNER JOIN usuarios u ON u.id = a.cliente_id
+      INNER JOIN usuarios p ON p.id = a.profissional_id
+      INNER JOIN estabelecimentos e ON e.usuario_id = p.id
+      ORDER BY a.criado_em DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar avaliações.' });
+  }
+});
+
+// ─── Rota: Estabelecimentos com média de avaliações ───────────────────────────
+app.get('/api/estabelecimentos-avaliacoes', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT e.id, e.nome_estab, e.profissao, e.cidade, e.estado, e.bairro,
+             e.descricao, e.tel_estab, u.id AS profissional_id, u.nome AS profissional_nome,
+             COALESCE(AVG(a.nota), 0) AS media,
+             COUNT(a.id) AS total_avaliacoes
+      FROM estabelecimentos e
+      INNER JOIN usuarios u ON u.id = e.usuario_id
+      LEFT JOIN avaliacoes a ON a.profissional_id = u.id
+      GROUP BY e.id, u.id, u.nome
+      ORDER BY media DESC, total_avaliacoes DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar estabelecimentos.' });
+  }
+});
+
+// ─── Rota: Avaliações de um estabelecimento específico ────────────────────────
+app.get('/api/avaliacoes-estabelecimento/:profissionalId', async (req, res) => {
+  try {
+    const { profissionalId } = req.params;
+    const result = await pool.query(`
+      SELECT a.id, a.nota, a.comentario, a.criado_em,
+             u.nome AS cliente_nome
+      FROM avaliacoes a
+      INNER JOIN usuarios u ON u.id = a.cliente_id
+      WHERE a.profissional_id = $1
+      ORDER BY a.criado_em DESC
+    `, [profissionalId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao buscar avaliações.' });
   }
 });
 

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avaliações — AgendaFácil</title>
+  <link rel="stylesheet" href="Avaliacoes.css" />
+  <link rel="shortcut icon" href="../Pagina Principal/Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="LogoTopo">
+      <img src="../Pagina Principal/Logo.png" class="Logo" />
+      <span class="logo-text">AgendaFácil</span>
+    </div>
+    <nav class="nav-links">
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
+      <a href="../Pagina de tutorial/Comofunciona.html">Como funciona</a>
+      <a href="../Pagina de Avaliacoes/Avaliacoes.html" class="active">Avaliações</a>
+      <a href="../Pagina de contato/contato.html">Contato</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-entrar" onclick="window.location.href='../Pagina de login/Pagina de Login.html'">Entrar</button>
+      <button class="btn-cadastro" onclick="window.location.href='../Pagina de Cadastro/CadastroUsuarios.html'">Cadastro</button>
+    </div>
+  </header>
+
+  <!-- VISTA: LISTA DE ESTABELECIMENTOS -->
+  <main class="page-wrapper" id="vista-lista">
+
+    <div class="page-header">
+      <div>
+        <h1>Avaliações</h1>
+        <p>Veja as avaliações de cada estabelecimento cadastrado</p>
+      </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filtros-row">
+      <div class="busca-input">
+        <span>🔍</span>
+        <input type="text" id="input-busca" placeholder="Buscar por nome do estabelecimento..." oninput="filtrarEstabelecimentos()" />
+      </div>
+      <select id="filtro-servico" onchange="filtrarEstabelecimentos()">
+        <option value="">Todos os serviços</option>
+      </select>
+      <select id="filtro-cidade" onchange="filtrarEstabelecimentos()">
+        <option value="">Todas as cidades</option>
+      </select>
+      <select id="filtro-estado" onchange="filtrarEstabelecimentos()">
+        <option value="">Todos os estados</option>
+      </select>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Carregando estabelecimentos...</p>
+    </div>
+
+    <!-- LISTA -->
+    <div class="estab-grid" id="lista-estab"></div>
+
+    <!-- VAZIO -->
+    <div class="vazio" id="vazio" style="display:none;">
+      <div class="vazio-icon">🏢</div>
+      <h3>Nenhum estabelecimento encontrado</h3>
+      <p>Tente ajustar os filtros de busca.</p>
+    </div>
+
+  </main>
+
+  <!-- VISTA: DETALHE DO ESTABELECIMENTO -->
+  <main class="page-wrapper" id="vista-detalhe" style="display:none;">
+
+    <button class="btn-voltar" onclick="voltarLista()">← Voltar para estabelecimentos</button>
+
+    <div class="detalhe-header">
+      <div class="detalhe-avatar" id="detalhe-avatar">?</div>
+      <div class="detalhe-info">
+        <h1 id="detalhe-nome"></h1>
+        <p id="detalhe-area"></p>
+        <div class="detalhe-meta">
+          <span id="detalhe-local"></span>
+        </div>
+      </div>
+      <div class="detalhe-media-box">
+        <span class="detalhe-media-num" id="detalhe-media">0.0</span>
+        <span class="detalhe-media-estrelas" id="detalhe-media-estrelas">☆☆☆☆☆</span>
+        <span class="detalhe-media-total" id="detalhe-media-total">0 avaliações</span>
+      </div>
+    </div>
+
+    <button class="btn-novo" id="btn-avaliar" onclick="abrirModalAvaliar()">⭐ Fazer avaliação</button>
+
+    <div class="modal-loading" id="detalhe-loading" style="margin-top:24px;">
+      <div class="spinner"></div>
+      <p>Carregando avaliações...</p>
+    </div>
+
+    <div class="avaliacoes-lista" id="lista-avaliacoes" style="margin-top:24px;"></div>
+
+    <div class="vazio" id="detalhe-vazio" style="display:none;">
+      <div class="vazio-icon">⭐</div>
+      <h3>Nenhuma avaliação ainda</h3>
+      <p>Seja o primeiro a avaliar este estabelecimento!</p>
+    </div>
+
+  </main>
+
+  <!-- MODAL AVALIAR -->
+  <div class="modal-overlay" id="modal-avaliar" onclick="fecharModalFora(event)">
+    <div class="modal">
+      <button class="modal-fechar" onclick="fecharModal()">✕</button>
+      <h2 class="modal-titulo">⭐ Fazer avaliação</h2>
+
+      <div id="login-aviso" style="display:none;">
+        <div class="aviso-login">
+          Você precisa estar logado para avaliar.
+          <button onclick="window.location.href='../Pagina de login/Pagina de Login.html'">Entrar</button>
+        </div>
+      </div>
+
+      <form id="form-avaliar" onsubmit="enviarAvaliacao(event)">
+
+        <div class="form-group">
+          <label>Nota</label>
+          <div class="estrelas" id="estrelas">
+            <span class="estrela" onclick="selecionarEstrela(1)">★</span>
+            <span class="estrela" onclick="selecionarEstrela(2)">★</span>
+            <span class="estrela" onclick="selecionarEstrela(3)">★</span>
+            <span class="estrela" onclick="selecionarEstrela(4)">★</span>
+            <span class="estrela" onclick="selecionarEstrela(5)">★</span>
+          </div>
+          <input type="hidden" id="aval-nota" value="0" />
+        </div>
+
+        <div class="form-group">
+          <label>Comentário <span class="opcional">(opcional)</span></label>
+          <textarea id="aval-comentario" placeholder="Conte sua experiência..."></textarea>
+        </div>
+
+        <div id="alerta-aval"></div>
+        <button type="submit" class="btn-salvar">Enviar avaliação</button>
+
+      </form>
+    </div>
+  </div>
+
+  <script src="Avaliacoes.js"></script>
+  <script src="../../auth.js"></script>
+
+</body>
+</html>
