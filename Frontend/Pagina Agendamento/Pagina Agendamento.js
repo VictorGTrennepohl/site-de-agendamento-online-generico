@@ -143,9 +143,23 @@ async function abrirModal(prof) {
 
   document.getElementById('horario-selecionado-id').value  = '';
   document.getElementById('horario-selecionado-txt').value = '';
-  document.getElementById('confirmacao').style.display     = 'none';
+
+  // Restaura o HTML original da confirmação (o botão de sucesso anterior
+  // pode ter sobrescrito o #confirmacao-horario na última vez que foi usado)
+  const confirmacaoEl = document.getElementById('confirmacao');
+  confirmacaoEl.innerHTML = `
+    <div class="confirmacao-box">
+      <p>Horário selecionado: <strong id="confirmacao-horario"></strong></p>
+    </div>
+  `;
+  confirmacaoEl.style.display = 'none';
+
   document.getElementById('quadro-horarios').style.display = 'block';
-  document.getElementById('btn-confirmar').style.display   = 'none';
+
+  const btnConfirmar = document.getElementById('btn-confirmar');
+  btnConfirmar.style.display = 'none';
+  btnConfirmar.disabled      = false;
+  btnConfirmar.textContent   = 'Confirmar agendamento ✅';
 
   await carregarHorarios(prof.id);
 
