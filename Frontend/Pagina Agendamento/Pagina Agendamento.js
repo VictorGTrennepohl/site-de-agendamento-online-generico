@@ -299,7 +299,8 @@ async function confirmarAgendamento() {
     const json = await resposta.json();
 
     if (resposta.ok) {
-      document.getElementById('confirmacao').innerHTML = `
+      const confirmacaoEl = document.getElementById('confirmacao');
+      confirmacaoEl.innerHTML = `
         <div class="sucesso-agendamento">
           ✅ <strong>Agendamento confirmado!</strong><br/>
           Horário: ${document.getElementById('horario-selecionado-txt').value}

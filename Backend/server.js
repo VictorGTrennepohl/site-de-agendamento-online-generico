@@ -263,6 +263,39 @@ app.post('/api/agendamentos', async (req, res) => {
   }
 });
 
+// ─── Rota: Profissional conclui agendamento ───────────────────────────────────
+app.put('/api/agendamentos/:id/concluir', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const ag = await pool.query('SELECT horario_id FROM agendamentos WHERE id = $1', [id]);
+    if (ag.rows.length === 0) return res.status(404).json({ erro: 'Agendamento não encontrado.' });
+
+    await pool.query('UPDATE agendamentos SET status = $1 WHERE id = $2', ['concluido', id]);
+
+    res.json({ mensagem: 'Agendamento marcado como concluído!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao concluir agendamento.' });
+  }
+});
+
+// ─── Rota: Profissional cancela agendamento de cliente ────────────────────────
+app.put('/api/agendamentos/:id/cancelar-profissional', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const ag = await pool.query('SELECT horario_id FROM agendamentos WHERE id = $1', [id]);
+    if (ag.rows.length === 0) return res.status(404).json({ erro: 'Agendamento não encontrado.' });
+
+    await pool.query('UPDATE horarios SET disponivel = TRUE WHERE id = $1', [ag.rows[0].horario_id]);
+    await pool.query('UPDATE agendamentos SET status = $1 WHERE id = $2', ['cancelado', id]);
+
+    res.json({ mensagem: 'Agendamento cancelado com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao cancelar agendamento.' });
+  }
+});
+
 // ─── Rota: Buscar agendamentos do cliente ─────────────────────────────────────
 app.get('/api/meus-agendamentos/:clienteId', async (req, res) => {
   try {
@@ -499,7 +532,6 @@ app.post('/api/contato', async (req, res) => {
     return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
   }
 
-  // DEPOIS
 try {
     const resultado = await resend.emails.send({
       from:    'onboarding@resend.dev',
@@ -546,6 +578,37 @@ app.get('/api/avaliacoes', async (req, res) => {
   }
 });
 
+app.post('/api/avaliacoes', async (req, res) => {
+  const { clienteId, profissionalId, nota, comentario } = req.body;
+
+  if (!clienteId || !profissionalId || !nota) {
+    return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
+  }
+
+  try {
+    const jaAvaliou = await pool.query(
+      'SELECT id FROM avaliacoes WHERE cliente_id = $1 AND profissional_id = $2',
+      [clienteId, profissionalId]
+    );
+
+    if (jaAvaliou.rows.length > 0) {
+      return res.status(400).json({ erro: 'Você já avaliou este profissional.' });
+    }
+
+    await pool.query(
+      `INSERT INTO avaliacoes (cliente_id, profissional_id, nota, comentario)
+       VALUES ($1, $2, $3, $4)`,
+      [clienteId, profissionalId, nota, comentario]
+    );
+
+    res.status(201).json({ mensagem: 'Avaliação enviada com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao enviar avaliação.' });
+  }
+});
+
+
 // ─── Rota: Estabelecimentos com média de avaliações ───────────────────────────
 app.get('/api/estabelecimentos-avaliacoes', async (req, res) => {
   try {
@@ -585,6 +648,8 @@ app.get('/api/avaliacoes-estabelecimento/:profissionalId', async (req, res) => {
     res.status(500).json({ erro: 'Erro ao buscar avaliações.' });
   }
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);

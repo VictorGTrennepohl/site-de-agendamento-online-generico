@@ -30,6 +30,8 @@ SELECT * FROM usuarios;
 DELETE FROM usuarios WHERE email = 'hypersnakeex@gmail.com';
 UPDATE horarios SET disponivel = TRUE;
 
+ALTER TABLE estabelecimentos ADD COLUMN estado VARCHAR(2);
+
 CREATE TABLE horarios (
   id SERIAL PRIMARY KEY,
   profissional_id INT REFERENCES usuarios(id),

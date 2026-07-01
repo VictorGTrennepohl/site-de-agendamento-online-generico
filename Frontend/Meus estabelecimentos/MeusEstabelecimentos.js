@@ -185,8 +185,8 @@ function renderizarAgendamentosModal(lista) {
 
   lista.forEach(ag => {
     const horario     = ag.horario ? ag.horario.substring(0, 5) : '';
-    const statusClass = ag.status === 'cancelado' ? 'cancelado' : 'confirmado';
-    const statusLabel = ag.status === 'cancelado' ? 'Cancelado' : 'Confirmado';
+    const statusClass = ag.status === 'cancelado' ? 'cancelado' : ag.status === 'concluido' ? 'concluido' : 'confirmado';
+    const statusLabel = ag.status === 'cancelado' ? 'Cancelado' : ag.status === 'concluido' ? 'Concluído' : 'Confirmado';
 
     const item = document.createElement('div');
     item.className = 'ag-item';
@@ -203,6 +203,11 @@ function renderizarAgendamentosModal(lista) {
           ${ag.cliente_telefone ? `<span>📞 ${ag.cliente_telefone}</span>` : ''}
           ${ag.cliente_email ? `<span>✉️ ${ag.cliente_email}</span>` : ''}
         </div>
+        ${ag.status !== 'cancelado' && ag.status !== 'concluido' ? `
+        <div class="ag-item-acoes">
+          <button class="btn-concluir" onclick="atualizarAgendamento(${ag.id}, 'concluir')">✅ Concluir</button>
+          <button class="btn-cancelar-prof" onclick="atualizarAgendamento(${ag.id}, 'cancelar-profissional')">❌ Cancelar</button>
+        </div>` : ''}
       </div>
     `;
     container.appendChild(item);
@@ -216,10 +221,7 @@ function filtrarModal(btn, status) {
 
   const filtrados = status === 'todos'
     ? todosAgendamentosModal
-    : todosAgendamentosModal.filter(ag => {
-        const s = ag.status === 'cancelado' ? 'cancelado' : 'confirmado';
-        return s === status;
-      });
+    : todosAgendamentosModal.filter(ag => ag.status === status);
 
   renderizarAgendamentosModal(filtrados);
 }
@@ -307,5 +309,32 @@ async function cadastrarEstabelecimento(e) {
   } finally {
     btn.disabled    = false;
     btn.textContent = 'Cadastrar estabelecimento';
+  }
+}
+
+// ─── Atualiza status do agendamento ──────────────────────────────────────────
+async function atualizarAgendamento(id, acao) {
+  const confirmar = acao === 'concluir'
+    ? 'Marcar este agendamento como concluído?'
+    : 'Cancelar este agendamento?';
+
+  if (!confirm(confirmar)) return;
+
+  try {
+    const resposta = await fetch(`${API_URL}/agendamentos/${id}/${acao}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const json = await resposta.json();
+
+    if (resposta.ok) {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      await abrirAgendamentos();
+    } else {
+      alert(json.erro || 'Erro ao atualizar agendamento.');
+    }
+  } catch (err) {
+    alert('Não foi possível conectar ao servidor.');
   }
 }

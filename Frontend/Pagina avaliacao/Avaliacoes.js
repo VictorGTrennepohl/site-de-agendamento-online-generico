@@ -21,8 +21,16 @@ async function carregarEstabelecimentos() {
 
   try {
     const resposta = await fetch(`${API_URL}/estabelecimentos-avaliacoes`);
-    todosEstabelecimentos = await resposta.json();
+    const dados = await resposta.json();
 
+    if (!Array.isArray(dados)) {
+      console.error('Erro da API:', dados);
+      loading.style.display = 'none';
+      vazio.style.display   = 'flex';
+      return;
+    }
+
+    todosEstabelecimentos = dados;
     loading.style.display = 'none';
 
     preencherFiltros(todosEstabelecimentos);
