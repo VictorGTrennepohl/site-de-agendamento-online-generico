@@ -3,7 +3,7 @@ const params = new URLSearchParams(window.location.search);
 const usuarioGoogle = params.get('usuario');
 if (usuarioGoogle) {
   localStorage.setItem('usuario', decodeURIComponent(usuarioGoogle));
-  window.location.href = '../Pagina Principal/Pagina_Principal.html';
+  window.location.href = '../Pagina Principal/index.html';
 }
 
 document.querySelector('.btn-login').addEventListener('click', async function (e) {
@@ -32,7 +32,7 @@ document.querySelector('.btn-login').addEventListener('click', async function (e
       alerta('Login realizado com sucesso! Redirecionando...', 'sucesso');
       localStorage.setItem('usuario', JSON.stringify(json.usuario));
       setTimeout(() => {
-        window.location.href = '../Pagina Principal/Pagina_Principal.html';
+        window.location.href = '../Pagina Principal/index.html';
       }, 2000);
     } else {
       alerta(json.erro || 'E-mail ou senha inválidos.', 'erro');

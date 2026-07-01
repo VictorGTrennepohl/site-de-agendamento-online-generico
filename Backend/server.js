@@ -72,7 +72,7 @@ passport.use(new GoogleStrategy({
 
 // ─── Rotas Google Auth ────────────────────────────────────────────────────────
 app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
+  passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' })
 );
 
 app.get('/auth/google/callback',
@@ -649,7 +649,24 @@ app.get('/api/avaliacoes-estabelecimento/:profissionalId', async (req, res) => {
   }
 });
 
+// ─── Rota: Excluir conta ──────────────────────────────────────────────────────
+app.delete('/api/usuario/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM agendamentos WHERE cliente_id = $1', [id]);
+    
+    await pool.query('DELETE FROM horarios WHERE profissional_id = $1', [id]);
+    await pool.query('DELETE FROM avaliacoes WHERE cliente_id = $1 OR profissional_id = $1', [id]);
+    await pool.query('DELETE FROM estabelecimentos WHERE usuario_id = $1', [id]);
+    
+    await pool.query('DELETE FROM usuarios WHERE id = $1', [id]);
 
+    res.json({ mensagem: 'Conta excluída com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao excluir conta.' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);

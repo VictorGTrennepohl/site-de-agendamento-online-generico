@@ -102,7 +102,7 @@ document.querySelector('.cadastro-form').addEventListener('submit', async functi
       localStorage.setItem('usuario', JSON.stringify(json.usuario));
       alerta('Cadastro realizado com sucesso! Redirecionando...', 'sucesso');
       setTimeout(() => {
-        window.location.href = '../Pagina Principal/Pagina_Principal.html';
+        window.location.href = '../Pagina Principal/index.html';
       }, 2000);
     } else {
       alerta(json.erro || 'Erro ao realizar cadastro.', 'erro');

@@ -138,13 +138,31 @@ function toggleSenha(id) {
 // ─── Sair da conta ────────────────────────────────────────────────────────────
 function sairConta() {
   localStorage.removeItem('usuario');
-  window.location.href = '../Pagina Principal/Pagina_Principal.html';
+  window.location.href = '../Pagina Principal/index.html';
 }
 
 // ─── Excluir conta ────────────────────────────────────────────────────────────
-function excluirConta() {
+async function excluirConta() {
   if (!confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita!')) return;
-  alert('Funcionalidade em desenvolvimento.');
+  if (!confirm('Última confirmação — todos os seus dados serão removidos permanentemente!')) return;
+
+  try {
+    const resposta = await fetch(`${API_URL}/usuario/${usuarioAtual.id}`, {
+      method: 'DELETE',
+    });
+
+    const json = await resposta.json();
+
+    if (resposta.ok) {
+      localStorage.removeItem('usuario');
+      alert('Conta excluída com sucesso!');
+      window.location.href = '../Pagina Principal/index.html';
+    } else {
+      alert(json.erro || 'Erro ao excluir conta.');
+    }
+  } catch (err) {
+    alert('Não foi possível conectar ao servidor.');
+  }
 }
 
 // ─── Exibe alerta ─────────────────────────────────────────────────────────────
