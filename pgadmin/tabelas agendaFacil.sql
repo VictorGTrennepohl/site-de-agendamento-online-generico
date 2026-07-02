@@ -29,7 +29,8 @@ CREATE TABLE estabelecimentos (
 SELECT * FROM usuarios;
 DELETE FROM usuarios WHERE email = 'hypersnakeex@gmail.com';
 UPDATE horarios SET disponivel = TRUE;
-
+SELECT id, nome, email, senha FROM usuarios WHERE email = 'hypersnakeex@gmail.com';
+ALTER TABLE usuarios ADD COLUMN google_id VARCHAR(100);
 ALTER TABLE estabelecimentos ADD COLUMN estado VARCHAR(2);
 
 CREATE TABLE horarios (

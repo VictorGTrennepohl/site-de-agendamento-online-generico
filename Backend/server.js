@@ -54,15 +54,19 @@ passport.use(new GoogleStrategy({
     );
 
     if (resultado.rows.length > 0) {
-      // Usuário já cadastrado — faz login normalmente
+      // Atualiza o google_id se ainda não tiver
+      if (!resultado.rows[0].google_id) {
+        await pool.query('UPDATE usuarios SET google_id = $1 WHERE id = $2',
+          [profile.id, resultado.rows[0].id]);
+      }
       return done(null, { ...resultado.rows[0], jaExiste: true });
     }
 
-    // Usuário não cadastrado — passa os dados do Google
     return done(null, {
       jaExiste: false,
       nome:  profile.displayName,
       email: profile.emails[0].value,
+      googleId: profile.id,
     });
 
   } catch (err) {
@@ -89,11 +93,11 @@ app.get('/auth/google/callback',
       const dados = encodeURIComponent(JSON.stringify(usuario));
       res.redirect(`http://127.0.0.1:5501/Frontend/Pagina%20de%20login/Pagina%20de%20Login.html?usuario=${dados}`);
     } else {
-      // Não cadastrado — vai para cadastro com email preenchido
-      const email = encodeURIComponent(req.user.email);
-      const nome  = encodeURIComponent(req.user.nome);
-      res.redirect(`http://127.0.0.1:5501/Frontend/Pagina%20de%20Cadastro/CadastroUsuarios.html?email=${email}&nome=${nome}`);
-    }
+        const email    = encodeURIComponent(req.user.email);
+        const nome     = encodeURIComponent(req.user.nome);
+        const googleId = encodeURIComponent(req.user.googleId);
+        res.redirect(`http://127.0.0.1:5501/Frontend/Pagina%20de%20Cadastro/CadastroUsuarios.html?email=${email}&nome=${nome}&googleId=${googleId}`);
+      }
   }
 );
 
@@ -101,7 +105,7 @@ app.get('/auth/google/callback',
 app.post('/api/cadastro', async (req, res) => {
   const {
     nome, email, cpf, telefone, senha, cidade, estado, tipo,
-    profissao, nomeEstab, cnpj, telEstab, endereco, bairro, cidadeEstab, cep, descricao
+    profissao, nomeEstab, cnpj, telEstab, endereco, bairro, cidadeEstab, cep, descricao, googleId
   } = req.body;
 
   if (!nome || !email || !senha) {
@@ -112,9 +116,9 @@ app.post('/api/cadastro', async (req, res) => {
     const senhaCriptografada = await bcrypt.hash(senha, 10);
 
     const resultUsuario = await pool.query(
-      `INSERT INTO usuarios (nome, email, cpf, telefone, senha, cidade, estado, tipo)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-      [nome, email, cpf, telefone, senhaCriptografada, cidade, estado, tipo]
+      `INSERT INTO usuarios (nome, email, cpf, telefone, senha, cidade, estado, tipo, google_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
+      [nome, email, cpf, telefone, senhaCriptografada, cidade, estado, tipo, googleId || null]
     );
 
     const usuarioId = resultUsuario.rows[0].id;
@@ -154,7 +158,7 @@ app.post('/api/cadastro', async (req, res) => {
     
   } catch (err) {
     if (err.code === '23505') {
-      return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
+      return res.status(400).json({ erro: 'Esta e-mail já está sendo usado.' });
     }
     console.error(err.message);
     res.status(500).json({ erro: 'Erro interno no servidor.' });
@@ -177,6 +181,11 @@ app.post('/login', async (req, res) => {
     }
 
     const usuario     = result.rows[0];
+
+    if (usuario.google_id) {
+      return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
+    }
+
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
 
     if (!senhaCorreta) {
@@ -636,6 +645,7 @@ app.get('/api/avaliacoes-estabelecimento/:profissionalId', async (req, res) => {
     const { profissionalId } = req.params;
     const result = await pool.query(`
       SELECT a.id, a.nota, a.comentario, a.criado_em,
+             a.cliente_id,
              u.nome AS cliente_nome
       FROM avaliacoes a
       INNER JOIN usuarios u ON u.id = a.cliente_id
@@ -665,6 +675,34 @@ app.delete('/api/usuario/:id', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ erro: 'Erro ao excluir conta.' });
+  }
+});
+
+// ─── Rota: Editar avaliação ───────────────────────────────────────────────────
+app.put('/api/avaliacoes/:id', async (req, res) => {
+  const { id } = req.params;
+  const { clienteId, nota, comentario } = req.body;
+
+  try {
+    // Verifica se a avaliação pertence ao cliente
+    const av = await pool.query(
+      'SELECT * FROM avaliacoes WHERE id = $1 AND cliente_id = $2',
+      [id, clienteId]
+    );
+
+    if (av.rows.length === 0) {
+      return res.status(403).json({ erro: 'Você não tem permissão para editar esta avaliação.' });
+    }
+
+    await pool.query(
+      'UPDATE avaliacoes SET nota = $1, comentario = $2 WHERE id = $3',
+      [nota, comentario, id]
+    );
+
+    res.json({ mensagem: 'Avaliação atualizada com sucesso!' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ erro: 'Erro ao editar avaliação.' });
   }
 });
 

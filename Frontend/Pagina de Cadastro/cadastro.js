@@ -2,6 +2,7 @@
 const params = new URLSearchParams(window.location.search);
 const emailGoogle = params.get('email');
 const nomeGoogle  = params.get('nome');
+const googleId = params.get('googleId');
 
 if (emailGoogle) {
   document.getElementById('email').value = decodeURIComponent(emailGoogle);
@@ -64,6 +65,7 @@ document.querySelector('.cadastro-form').addEventListener('submit', async functi
   const dados = {
     tipo: tipoAtual,
     nome, cpf, email, telefone, senha, cidade, estado,
+    googleId: googleId || null,
   };
 
   // Campos extras se for profissional
@@ -102,7 +104,7 @@ document.querySelector('.cadastro-form').addEventListener('submit', async functi
       localStorage.setItem('usuario', JSON.stringify(json.usuario));
       alerta('Cadastro realizado com sucesso! Redirecionando...', 'sucesso');
       setTimeout(() => {
-        window.location.href = '../Pagina Principal/index.html';
+        window.location.href = '../Pagina Principal/Pagina_Principal.html';
       }, 2000);
     } else {
       alerta(json.erro || 'Erro ao realizar cadastro.', 'erro');

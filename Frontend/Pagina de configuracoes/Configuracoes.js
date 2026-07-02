@@ -138,7 +138,7 @@ function toggleSenha(id) {
 // ─── Sair da conta ────────────────────────────────────────────────────────────
 function sairConta() {
   localStorage.removeItem('usuario');
-  window.location.href = '../Pagina Principal/index.html';
+  window.location.href = '../Pagina Principal/Pagina_Principal.html';
 }
 
 // ─── Excluir conta ────────────────────────────────────────────────────────────
@@ -156,7 +156,7 @@ async function excluirConta() {
     if (resposta.ok) {
       localStorage.removeItem('usuario');
       alert('Conta excluída com sucesso!');
-      window.location.href = '../Pagina Principal/index.html';
+      window.location.href = '../Pagina Principal/Pagina_Principal.html';
     } else {
       alert(json.erro || 'Erro ao excluir conta.');
     }

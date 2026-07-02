@@ -16,7 +16,7 @@
       <span class="logo-text">AgendaFácil</span>
     </div>
     <nav class="nav-links">
-      <a href="../Pagina Principal/index.html">Início</a>
+      <a href="../Pagina Principal/Pagina_Principal.html">Início</a>
       <a href="../Pagina de tutorial/Comofunciona.html">Como funciona</a>
       <a href="../Pagina de contato/contato.html">Contato</a>
       <a href="../Pagina de Avaliacoes/Avaliacoes.html" class="active">Avaliações</a>
@@ -148,6 +148,38 @@
       </form>
     </div>
   </div>
+
+<!-- MODAL EDITAR AVALIAÇÃO -->
+<div class="modal-overlay" id="modal-editar-av" onclick="if(event.target.id==='modal-editar-av'){this.style.display='none';document.body.style.overflow='';}">
+  <div class="modal">
+    <button class="modal-fechar" onclick="document.getElementById('modal-editar-av').style.display='none';document.body.style.overflow='';">✕</button>
+    <h2 class="modal-titulo">✏️ Editar avaliação</h2>
+
+    <form onsubmit="salvarEdicaoAvaliacao(event)">
+      <input type="hidden" id="edit-aval-id" />
+      <input type="hidden" id="edit-aval-nota" value="0" />
+
+      <div class="form-group">
+        <label>Nota</label>
+        <div class="estrelas" id="estrelas-edit">
+          <span class="estrela estrela-edit" onclick="selecionarEstrelaEdit(1)">★</span>
+          <span class="estrela estrela-edit" onclick="selecionarEstrelaEdit(2)">★</span>
+          <span class="estrela estrela-edit" onclick="selecionarEstrelaEdit(3)">★</span>
+          <span class="estrela estrela-edit" onclick="selecionarEstrelaEdit(4)">★</span>
+          <span class="estrela estrela-edit" onclick="selecionarEstrelaEdit(5)">★</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Comentário <span class="opcional">(opcional)</span></label>
+        <textarea id="edit-aval-comentario" placeholder="Edite seu comentário..."></textarea>
+      </div>
+
+      <div id="alerta-edit-av"></div>
+      <button type="submit" class="btn-salvar">Salvar alterações</button>
+    </form>
+  </div>
+</div>
 
   <script src="Avaliacoes.js"></script>
   <script src="../../auth.js"></script>

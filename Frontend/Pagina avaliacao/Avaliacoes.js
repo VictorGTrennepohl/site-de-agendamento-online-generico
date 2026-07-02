@@ -165,10 +165,13 @@ async function carregarAvaliacoesEstabelecimento(profissionalId) {
       return;
     }
 
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
     avaliacoesAtuais.forEach(av => {
       const estrelas = '★'.repeat(av.nota) + '☆'.repeat(5 - av.nota);
       const data     = new Date(av.criado_em).toLocaleDateString('pt-BR');
       const inicial  = av.cliente_nome ? av.cliente_nome.charAt(0).toUpperCase() : '?';
+      const ehMinha  = usuario && usuario.id === av.cliente_id;
 
       const card = document.createElement('div');
       card.className = 'av-card';
@@ -179,6 +182,7 @@ async function carregarAvaliacoesEstabelecimento(profissionalId) {
             <div class="av-cliente">${av.cliente_nome}</div>
           </div>
           <div class="av-data">${data}</div>
+          ${ehMinha ? `<button class="btn-editar-av" onclick="abrirEditarAvaliacao(${av.id}, ${av.nota}, \`${av.comentario || ''}\`)">✏️ Editar</button>` : ''}
         </div>
         <div class="av-estrelas">${estrelas}</div>
         ${av.comentario ? `<div class="av-comentario">"${av.comentario}"</div>` : ''}
@@ -287,6 +291,77 @@ function fecharModalFora(e) {
 // ─── Alerta ───────────────────────────────────────────────────────────────────
 function mostrarAlerta(mensagem, tipo) {
   const div = document.getElementById('alerta-aval');
+  div.innerHTML = `<div class="alerta ${tipo}">${mensagem}</div>`;
+  setTimeout(() => div.innerHTML = '', 4000);
+}
+
+// ─── Abre modal de editar avaliação ──────────────────────────────────────────
+function abrirEditarAvaliacao(id, nota, comentario) {
+  document.getElementById('edit-aval-id').value          = id;
+  document.getElementById('edit-aval-comentario').value  = comentario;
+  document.getElementById('edit-aval-nota').value        = nota;
+
+  // Atualiza estrelas
+  document.querySelectorAll('.estrela-edit').forEach((e, i) => {
+    e.classList.toggle('ativa', i < nota);
+  });
+
+  document.getElementById('modal-editar-av').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// ─── Seleciona estrela no modal de edição ────────────────────────────────────
+function selecionarEstrelaEdit(nota) {
+  document.getElementById('edit-aval-nota').value = nota;
+  document.querySelectorAll('.estrela-edit').forEach((e, i) => {
+    e.classList.toggle('ativa', i < nota);
+  });
+}
+
+// ─── Salva edição da avaliação ────────────────────────────────────────────────
+async function salvarEdicaoAvaliacao(e) {
+  e.preventDefault();
+  const usuario    = JSON.parse(localStorage.getItem('usuario'));
+  const id         = document.getElementById('edit-aval-id').value;
+  const nota       = parseInt(document.getElementById('edit-aval-nota').value);
+  const comentario = document.getElementById('edit-aval-comentario').value.trim();
+
+  if (!nota) return mostrarAlertaEdit('Selecione uma nota.', 'erro');
+
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled    = true;
+  btn.textContent = 'Salvando...';
+
+  try {
+    const resposta = await fetch(`${API_URL}/avaliacoes/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clienteId: usuario.id, nota, comentario }),
+    });
+
+    const json = await resposta.json();
+
+    if (resposta.ok) {
+      mostrarAlertaEdit('✅ Avaliação atualizada!', 'sucesso');
+      setTimeout(async () => {
+        document.getElementById('modal-editar-av').style.display = 'none';
+        document.body.style.overflow = '';
+        await carregarAvaliacoesEstabelecimento(estabelecimentoAtual.profissional_id);
+        await carregarEstabelecimentos();
+      }, 1500);
+    } else {
+      mostrarAlertaEdit(json.erro || 'Erro ao salvar.', 'erro');
+    }
+  } catch (err) {
+    mostrarAlertaEdit('Não foi possível conectar ao servidor.', 'erro');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Salvar alterações';
+  }
+}
+
+function mostrarAlertaEdit(mensagem, tipo) {
+  const div = document.getElementById('alerta-edit-av');
   div.innerHTML = `<div class="alerta ${tipo}">${mensagem}</div>`;
   setTimeout(() => div.innerHTML = '', 4000);
 }

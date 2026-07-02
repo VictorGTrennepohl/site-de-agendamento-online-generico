@@ -610,6 +610,23 @@ body {
   margin: 2px 0;
 }
 
+.btn-editar-av {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text-primary);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.btn-editar-av:hover { background: rgba(255,255,255,0.16); }
+
 .detalhe-media-total { font-size: 0.74rem; color: var(--text-muted); }
 
 /* RESPONSIVIDADE EXTRA */
@@ -622,3 +639,4 @@ body {
 @media (max-width: 480px) {
   .estab-grid { grid-template-columns: 1fr; }
 }
+
